@@ -1,0 +1,27 @@
+html {
+  height: 100%;
+}
+
+*,
+:after,
+:before,
+html {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100%;
+  max-width: 100vw;
+  margin: 0;
+}
+
+body,
+html {
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--geist-background);
+  color: var(--geist-foreground);
+  scroll-padding-top: var(--header-height)
+}
