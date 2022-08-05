@@ -17,8 +17,8 @@ export const Menu = (props: MenuProps) => {
       placement="bottomEnd"
       content={
         <div
-          style={{ '--menu-item-hover-color': theme.palette.accents_1 }}
-          className={`min-w-[150px] child-hover:bg-menu-item-hover-color child-hover:!cursor-pointer`}
+          style={{ minWidth: `${props.itemWidth || 150}px` }}
+          className={`children:hover:bg-${theme.palette.accents_1} children:hover:!cursor-pointer`}
         >
           {props.content}
         </div>
