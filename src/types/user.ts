@@ -15,3 +15,7 @@ export interface CompanyUser {
   username: string;
   password: string;
 }
+
+export interface CompanyUserResponse {
+  msg: string;
+}

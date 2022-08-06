@@ -3,6 +3,7 @@ import 'uno.css';
 
 import React, { useEffect, useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { CssBaseline, GeistProvider } from '@geist-ui/core';
 
@@ -70,7 +71,9 @@ const App = () => {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HelmetProvider>
     <React.StrictMode>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </React.StrictMode>
   </HelmetProvider>
 );
