@@ -2,7 +2,7 @@ import { Button, Input, Link, Note, Spacer, Tabs, Text } from '@geist-ui/core';
 import Tool from '@geist-ui/icons/tool';
 
 import { Helmet } from 'react-helmet-async';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { CompanyUserResponse, FlexUserResponse } from '@/types/user';
@@ -28,12 +28,10 @@ const FlexForm = () => {
 
   const { setToast } = useToasts();
 
-  const trimmedData = useMemo(() => {
-    return {
-      client_id: clientId.trim(),
-      client_secret: clientSecret.trim(),
-    };
-  }, [clientId, clientSecret]);
+  const trimmedData = {
+    client_id: clientId.trim(),
+    client_secret: clientSecret.trim(),
+  };
 
   const login = useCallback(
     async ({ client_id, client_secret }: { client_id: string; client_secret: string }) => {
@@ -129,12 +127,10 @@ const CompanyForm = () => {
   const navigate = useNavigate();
   const { setToast } = useToasts();
 
-  const trimmedData = useMemo(() => {
-    return {
-      username: username.trim(),
-      password: password.trim(),
-    };
-  }, [username, password]);
+  const trimmedData = {
+    username: username.trim(),
+    password: password.trim(),
+  };
 
   const login = useCallback(
     async ({ username, password }: { username: string; password: string }) => {
