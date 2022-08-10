@@ -49,21 +49,23 @@ const FlexForm = () => {
       try {
         setIslodding(true);
 
-        const resp = await fetcherWithLoginForFlex<FlexUserResponse>(client_id, client_secret);
+        setTimeout(async () => {
+          const resp = await fetcherWithLoginForFlex<FlexUserResponse>(client_id, client_secret);
 
-        if (resp.access_token) {
-          setToken(resp.access_token);
+          if (resp.access_token) {
+            setToken(resp.access_token);
 
-          setToast({
-            type: 'success',
-            text: '登入成功',
-            delay: 3000,
-          });
+            setToast({
+              type: 'success',
+              text: '登入成功',
+              delay: 2000,
+            });
 
-          navigate('/flex/device');
-        } else {
-          handleLoginError();
-        }
+            navigate('/flex/device');
+          } else {
+            handleLoginError();
+          }
+        }, 2000);
       } catch {
         handleLoginError();
       }
@@ -96,7 +98,7 @@ const FlexForm = () => {
         </Text>
       </Input>
       <Spacer />
-      <Input
+      <Input.Password
         width="100%"
         placeholder="请输入 client_secret"
         onChange={e => setClientSecret(e.target.value)}
@@ -147,22 +149,24 @@ const CompanyForm = () => {
       try {
         setIslodding(true);
 
-        const resp = await fetcherWithLoginForCompany<CompanyUserResponse>(username, password);
+        setTimeout(async () => {
+          const resp = await fetcherWithLoginForCompany<CompanyUserResponse>(username, password);
 
-        if (resp.msg) {
-          setIsCompany('yes');
+          if (resp.msg) {
+            setIsCompany('yes');
 
-          setToast({
-            type: 'success',
-            text: '登入成功',
-            delay: 3000,
-          });
+            setToast({
+              type: 'success',
+              text: '登入成功',
+              delay: 2000,
+            });
 
-          navigate('/company/index');
-        } else {
-          handleLoginError();
-        }
-      } catch {
+            navigate('/company/index');
+          } else {
+            handleLoginError();
+          }
+        }, 2000);
+      } catch (e) {
         handleLoginError();
       }
     },
