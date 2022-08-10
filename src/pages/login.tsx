@@ -46,10 +46,9 @@ const FlexForm = () => {
         });
       };
 
-      try {
-        setIslodding(true);
-
-        setTimeout(async () => {
+      setIslodding(true);
+      setTimeout(async () => {
+        try {
           const resp = await fetcherWithLoginForFlex<FlexUserResponse>(client_id, client_secret);
 
           if (resp.access_token) {
@@ -65,10 +64,10 @@ const FlexForm = () => {
           } else {
             handleLoginError();
           }
-        }, 2000);
-      } catch {
-        handleLoginError();
-      }
+        } catch {
+          handleLoginError();
+        }
+      }, 2000);
     },
     []
   );
@@ -146,12 +145,10 @@ const CompanyForm = () => {
         });
       };
 
-      try {
-        setIslodding(true);
-
-        setTimeout(async () => {
+      setIslodding(true);
+      setTimeout(async () => {
+        try {
           const resp = await fetcherWithLoginForCompany<CompanyUserResponse>(username, password);
-
           if (resp.msg) {
             setIsCompany('yes');
 
@@ -165,10 +162,10 @@ const CompanyForm = () => {
           } else {
             handleLoginError();
           }
-        }, 2000);
-      } catch (e) {
-        handleLoginError();
-      }
+        } catch (e) {
+          handleLoginError();
+        }
+      }, 2000);
     },
     []
   );
