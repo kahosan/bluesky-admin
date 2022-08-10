@@ -1,79 +1,46 @@
-import { useCallback } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Modal, Text } from '@geist-ui/core';
+import { ProtectedLayoutForCo, ProtectedLayoutForFlex } from './protected-router';
 
 import { LoginPage } from '@/pages/login';
 import { NotFoundError } from '@/pages/404';
 
 // Flex Page
-import { FlexIndex } from '@/pages/flex/index';
+import { FlexIndex } from '@/pages/flex';
 
 // Company Page
-
 import { CompanyIndex } from '@/pages/company';
 
-import { useFlexApiToken } from '@/hooks/use-flex-api-token';
 import { useIsCompany } from '@/hooks/use-is-company';
+import { useIsLogin } from '@/hooks/use-is-login';
 
-const ProtectedRoute = ({
-  children,
-  isCompany,
-}: {
-  children: JSX.Element;
-  isCompany: string | null;
-}) => {
-  const navigate = useNavigate();
-  const location = useLocation();
+import { AuthFailed } from '@/components/auth-failed';
 
-  const flexToken = useFlexApiToken()[0];
+const Redirect = () => {
+  const isCompany = useIsCompany()[0];
 
-  const abortJump = useCallback(() => {
-    setTimeout(() => navigate('/login'), 3000);
-    return (
-      <Modal visible={true}>
-        <Modal.Title>没有权限</Modal.Title>
-        <Modal.Content className="!text-center">
-          <Text p>三秒后将跳转到登入页面</Text>
-        </Modal.Content>
-      </Modal>
-    );
-  }, [location]);
-
-  // 如果是是 flex 用户，则不允许进入公司页面
-  if (!isCompany && /company/.test(location.pathname)) {
-    return abortJump();
-  } else if (!flexToken && /flex/.test(location.pathname)) {
-    return abortJump();
+  if (isCompany) {
+    return <Navigate to="/company/index" />;
+  } else {
+    return <Navigate to="/flex/index" />;
   }
-
-  return children;
 };
 
 export const Routers = () => {
-  const isCompany = useIsCompany()[0];
+  const isLogin = useIsLogin();
 
   return (
     <Routes>
-      <Route
-        path="/flex/index"
-        element={
-          <ProtectedRoute isCompany={isCompany}>
-            <FlexIndex />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/" element={isLogin ? <Redirect /> : <AuthFailed />} />
+      <Route element={<ProtectedLayoutForFlex />}>
+        <Route path="/flex/index" element={<FlexIndex />} />
+      </Route>
+      <Route element={<ProtectedLayoutForCo />}>
+        <Route path="/company/index" element={<CompanyIndex />} />
+      </Route>
 
-      <Route
-        path="/company/index"
-        element={
-          <ProtectedRoute isCompany={isCompany}>
-            <CompanyIndex />
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/login" element={isLogin ? <Redirect /> : <LoginPage />} />
 
-      <Route path="/login" element={<LoginPage />} />
       <Route path="*" element={<NotFoundError title="This page could not be found." />} />
     </Routes>
   );
