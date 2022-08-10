@@ -1,8 +1,13 @@
 import { Modal, Text } from '@geist-ui/core';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 export const AuthFailed = () => {
   const navigate = useNavigate();
-  setTimeout(() => navigate('/login'), 3000);
+
+  useEffect(() => {
+    setTimeout(() => navigate('/login'), 3000);
+  });
 
   return (
     <Modal visible={true}>
