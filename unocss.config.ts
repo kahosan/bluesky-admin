@@ -1,5 +1,4 @@
-import { defineConfig } from 'unocss';
-import presetUno from '@unocss/preset-uno';
+import { defineConfig, presetUno } from 'unocss';
 import { Themes } from '@geist-ui/core';
 
 const themeColors: string[] = Object.values(Themes.getPresets()[0].palette);
