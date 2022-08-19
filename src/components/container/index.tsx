@@ -1,8 +1,8 @@
 import { useTheme } from '@geist-ui/core';
 
 interface ContainerProps {
-  children: JSX.Element;
-  maxWidth: string;
+  children: JSX.Element
+  maxWidth: string
 }
 
 export const Container = ({
@@ -20,7 +20,7 @@ export const Container = ({
         paddingRight: theme.layout.gap,
         marginLeft: 'auto',
         marginRight: 'auto',
-        maxWidth,
+        maxWidth
       }}
       {...rest}
     >

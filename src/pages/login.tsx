@@ -31,7 +31,7 @@ const FlexForm = () => {
   const trimmedData = useMemo(
     () => ({
       client_id: clientId.trim(),
-      client_secret: clientSecret.trim(),
+      client_secret: clientSecret.trim()
     }),
     [clientId, clientSecret]
   );
@@ -45,7 +45,7 @@ const FlexForm = () => {
         setToast({
           type: 'error',
           text: '登入错误 请检查输入的 client_id 和 client_secret',
-          delay: 5000,
+          delay: 5000
         });
       };
 
@@ -60,7 +60,7 @@ const FlexForm = () => {
             setToast({
               type: 'success',
               text: '登入成功',
-              delay: 2000,
+              delay: 2000
             });
 
             navigate('/flex/device');
@@ -134,7 +134,7 @@ const CompanyForm = () => {
   const trimmedData = useMemo(
     () => ({
       username: username.trim(),
-      password: password.trim(),
+      password: password.trim()
     }),
     [username, password]
   );
@@ -147,7 +147,7 @@ const CompanyForm = () => {
         setToast({
           type: 'error',
           text: '登入错误 请检查输入的用户名和密码',
-          delay: 5000,
+          delay: 5000
         });
       };
 
@@ -161,7 +161,7 @@ const CompanyForm = () => {
             setToast({
               type: 'success',
               text: '登入成功',
-              delay: 2000,
+              delay: 2000
             });
 
             navigate('/company/index');

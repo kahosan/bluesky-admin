@@ -27,7 +27,7 @@ const querySubscribe = (query: string, setState: QueryStateSetter) => {
     entry = {
       mql,
       dispatchers,
-      listener,
+      listener
     };
     queriesMap.set(query, entry);
   }

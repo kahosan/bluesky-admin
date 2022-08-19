@@ -8,9 +8,7 @@ import { AuthFailed } from '@/components/auth-failed';
 export const ProtectedLayoutForFlex = () => {
   const token = useFlexApiToken()[0];
 
-  if (token) {
-    return <Outlet />;
-  }
+  if (token) { return <Outlet />; }
 
   return <AuthFailed />;
 };
@@ -18,9 +16,7 @@ export const ProtectedLayoutForFlex = () => {
 export const ProtectedLayoutForCo = () => {
   const token = useIsCompany()[0];
 
-  if (token) {
-    return <Outlet />;
-  }
+  if (token) { return <Outlet />; }
 
   return <AuthFailed />;
 };

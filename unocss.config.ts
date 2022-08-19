@@ -9,5 +9,5 @@ function generatorChildrenHover(colors: string[]) {
 
 export default defineConfig({
   presets: [presetUno()],
-  safelist: [...generatorChildrenHover(themeColors)],
+  safelist: [...generatorChildrenHover(themeColors)]
 });

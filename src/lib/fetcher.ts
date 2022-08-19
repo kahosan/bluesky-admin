@@ -10,22 +10,22 @@ export class HTTPError extends Error {
 }
 
 interface AuthorizationData {
-  key: string;
-  token: string;
+  key: string
+  token: string
 }
 
 export const fetcherWithAuthorizationOnFlex = async <T>({
   key,
-  token,
+  token
 }: AuthorizationData): Promise<T> => {
   const headers = new Headers({
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
+    'Authorization': `Bearer ${token}`
   });
 
   const res = await fetch(new URL(key, 'https://flex-proxy.kahosan.workers.dev'), {
     method: 'POST',
-    headers,
+    headers
   });
 
   const data = res.headers.get('content-type')?.includes('application/json')
@@ -51,15 +51,15 @@ export const fetcherWithLoginForFlex = async <T>(
     scope: 'fbox',
     client_id,
     client_secret,
-    grant_type: 'client_credentials',
+    grant_type: 'client_credentials'
   });
 
   const res = await fetch('https://flex-proxy.kahosan.workers.dev/idserver/core/connect/token', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body,
+    body
   });
 
   const data = await res.json();
@@ -82,10 +82,10 @@ export const fetcherWithLoginForCompany = async <T>(
   const res = await fetch('http://localhost:8080/login', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({ username, password }),
-    credentials: 'include',
+    credentials: 'include'
   });
 
   const data = await res.json();

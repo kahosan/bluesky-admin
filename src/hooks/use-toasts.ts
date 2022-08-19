@@ -5,6 +5,6 @@ export const useToasts = () => {
 
   return {
     setToast: origSetToast,
-    clearToasts: origClearToasts,
+    clearToasts: origClearToasts
   };
 };
