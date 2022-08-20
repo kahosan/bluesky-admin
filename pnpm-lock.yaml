@@ -8,8 +8,8 @@ specifiers:
   '@types/react-dom': ^18.0.6
   '@vitejs/plugin-react': ^1.3.2
   eslint: ^8.22.0
-  eslint-config-kaho: ^1.0.7
-  jotai: ^1.7.8
+  eslint-config-kaho: ^1.0.8
+  jotai: ^1.8.0
   react: ^18.2.0
   react-dom: ^18.2.0
   react-helmet-async: ^1.3.0
@@ -23,7 +23,7 @@ specifiers:
 dependencies:
   '@geist-ui/core': 2.3.8_biqbaboplfbrettd7655fr4n2y
   '@geist-ui/icons': 1.0.2_zhza2kbnl2wkkf7vqdl3ton2f4
-  jotai: 1.7.8_react@18.2.0
+  jotai: 1.8.0_react@18.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-helmet-async: 1.3.0_biqbaboplfbrettd7655fr4n2y
@@ -36,7 +36,7 @@ devDependencies:
   '@types/react-dom': 18.0.6
   '@vitejs/plugin-react': 1.3.2
   eslint: 8.22.0
-  eslint-config-kaho: 1.0.7_4rv7y5c6xz3vfxwhbrcxxi73bq
+  eslint-config-kaho: 1.0.8_4rv7y5c6xz3vfxwhbrcxxi73bq
   typescript: 4.7.4
   unocss: 0.45.8_vite@2.9.15
   vite: 2.9.15
@@ -1651,8 +1651,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-kaho/1.0.7_4rv7y5c6xz3vfxwhbrcxxi73bq:
-    resolution: {integrity: sha512-fDXrJEpTnEUx0XUq1m8UkqiVk4pFuthVivZhNRZCYiCJ8T+m3To31bNg2RFq5r3xa46efxZNzW5uwSuha8AkkQ==}
+  /eslint-config-kaho/1.0.8_4rv7y5c6xz3vfxwhbrcxxi73bq:
+    resolution: {integrity: sha512-se7svGIntMx7VGr27KkRdTrFbavMESCu+LPt1H5hJ6sZIqorEA0wH9enoYx/YEQpds0xFTPC0f7Q/rXff1HJAQ==}
     dependencies:
       '@antfu/eslint-config-basic': 0.25.2_4rv7y5c6xz3vfxwhbrcxxi73bq
       '@antfu/eslint-config-ts': 0.25.2_4rv7y5c6xz3vfxwhbrcxxi73bq
@@ -2606,8 +2606,8 @@ packages:
     hasBin: true
     dev: true
 
-  /jotai/1.7.8_react@18.2.0:
-    resolution: {integrity: sha512-rXwWz6uLqyZUCRzWIPiYTjI1hjskVxVpDN3lBoOHi66z6uQFkFmKwR8YhcQd+Ex4lODlReuKNIx6WwsF9aKy3g==}
+  /jotai/1.8.0_react@18.2.0:
+    resolution: {integrity: sha512-B77a5hIDGCxePYrYBpHP6YePGyNwivA+vXO6QME+8+t3V0y+OHwwnHu4Wy/LWEChE/G8vI+K7P2tlToT8Zmjng==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       '@babel/core': '*'
