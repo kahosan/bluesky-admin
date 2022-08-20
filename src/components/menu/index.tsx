@@ -18,7 +18,7 @@ export const Menu = (props: MenuProps) => {
       content={
         <div
           style={{ minWidth: `${props.itemWidth || 150}px` }}
-          className={`children:hover:bg-${theme.palette.accents_1} children:hover:!cursor-pointer`}
+          className={`hover-children:bg-${theme.palette.accents_1} hover-children:!cursor-pointer`}
         >
           {props.content}
         </div>
