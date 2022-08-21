@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, MenuItem } from '../menu';
 import { Container } from '../container';
 import { NavLink } from '../nav-link';
+import { FlexLogo } from '../flex-brand';
 import { ThemeToggle } from './toggle-theme';
 
 import { useFlexApiToken } from '@/hooks/use-flex-api-token';
@@ -47,9 +48,7 @@ export const AvatarMenu = (props: { name: string }) => {
         content={
           <>
             <MenuItem>
-              <Link>
-                <NavLink to="/">Dashboard</NavLink>
-              </Link>
+              <NavLink to="/">Dashboard</NavLink>
             </MenuItem>
             <MenuItem>
               <Link
@@ -90,7 +89,9 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  enum route {
+  const [isCompany] = useIsCompany();
+
+  enum routeWithCompany {
     '/company/index' = 1,
     '/company/rootcloud'
     // todo
@@ -99,16 +100,16 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const handleTabsChange = useCallback((id: string) => {
     switch (id) {
       case '1':
-        navigate(route['1']);
+        navigate(routeWithCompany['1']);
         break;
       case '2':
-        navigate(route['2']);
+        navigate(routeWithCompany['2']);
         break;
       default:
         console.warn('route is not found, id: ', id);
         break;
     }
-  }, [route, navigate]);
+  }, [routeWithCompany, navigate]);
 
   return (
     <>
@@ -125,11 +126,14 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
             className='flex items-center content-between h-100% my-0 mx-auto select-none'
           >
             <div className='flex flex-1 items-baseline content-start'>
-
-              <Tabs initialValue='1' hideBorder hideDivider className='flex' onChange={id => handleTabsChange(id) }>
-                <Tabs.Item label='Ezviz' value='1'/>
-                <Tabs.Item label='RootCloud' value='2'/>
-              </Tabs>
+              {
+                isCompany
+                  ? (<Tabs initialValue='1' hideBorder hideDivider className='flex' onChange={id => handleTabsChange(id) }>
+                    <Tabs.Item label='Ezviz' value='1'/>
+                    <Tabs.Item label='RootCloud' value='2'/>
+                  </Tabs>)
+                  : <FlexLogo size='24' />
+              }
             </div>
             <AvatarMenu name={props.name} />
           </div>
