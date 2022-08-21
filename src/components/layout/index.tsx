@@ -1,4 +1,5 @@
-import { Link, Popover, Text, useTheme, useToasts } from '@geist-ui/core';
+import { Breadcrumbs, Link, Popover, Text, useTheme, useToasts } from '@geist-ui/core';
+import Tool from '@geist-ui/icons/tool';
 
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { ThemeToggle } from './toggle-theme';
 
 import { useFlexApiToken } from '@/hooks/use-flex-api-token';
 import { useIsCompany } from '@/hooks/use-is-company';
+import { useBreadCrumb } from '@/hooks/use-bread-crumb';
 
 export const AvatarMenu = (props: { name: string }) => {
   const [, setFlexToken] = useFlexApiToken();
@@ -78,6 +80,7 @@ export const AvatarMenu = (props: { name: string }) => {
 
 export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const theme = useTheme();
+  const [breadCrumb] = useBreadCrumb();
 
   return (
     <>
@@ -91,6 +94,12 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
             className='flex items-center content-between h-100% my-0 mx-auto select-none'
           >
             <div className='flex flex-1 items-center content-start'>
+              <Breadcrumbs className='!text-1.2rem'>
+                <Breadcrumbs.Item href='/'><Tool size='28px' color={theme.palette.accents_8}/></Breadcrumbs.Item>
+                {breadCrumb.map(item => (
+                  <Breadcrumbs.Item key={item.id} href={item.href}>{item.label}</Breadcrumbs.Item>
+                ))}
+              </Breadcrumbs>
             </div>
             <AvatarMenu name={props.name} />
           </div>
