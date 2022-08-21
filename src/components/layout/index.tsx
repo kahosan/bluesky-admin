@@ -1,9 +1,9 @@
 import { Link, Popover, Tabs, Text, useTheme, useToasts } from '@geist-ui/core';
+import { Github, Mail } from '@geist-ui/icons';
 
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Github, Mail } from '@geist-ui/icons';
 import { Menu, MenuItem } from '../menu';
 import { Container } from '../container';
 import { NavLink } from '../nav-link';
