@@ -128,7 +128,7 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
             <div className='flex flex-1 items-baseline content-start'>
               {
                 isCompany
-                  ? (<Tabs initialValue='1' hideBorder hideDivider className='flex' onChange={id => handleTabsChange(id) }>
+                  ? (<Tabs initialValue='1' hideBorder hideDivider leftSpace='0' className='flex children:!overflow-unset' onChange={id => handleTabsChange(id) }>
                     <Tabs.Item label='Ezviz' value='1'/>
                     <Tabs.Item label='RootCloud' value='2'/>
                   </Tabs>)
