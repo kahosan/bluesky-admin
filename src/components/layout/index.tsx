@@ -105,6 +105,7 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
         navigate(route['2']);
         break;
       default:
+        console.warn('route is not found, id: ', id);
         break;
     }
   }, [route, navigate]);
