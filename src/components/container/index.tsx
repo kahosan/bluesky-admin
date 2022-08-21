@@ -1,7 +1,8 @@
 import { useTheme } from '@geist-ui/core';
+import React from 'react';
 
 interface ContainerProps {
-  children: JSX.Element
+  children: React.ReactNode
   maxWidth: string
 }
 
