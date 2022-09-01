@@ -2,7 +2,7 @@ import { Breadcrumbs as GBreadcrumbs } from '@geist-ui/core';
 
 import type { ReactNode } from 'react';
 
-import { NavLink } from '../nav-link';
+import { RouteLink } from '../route-link';
 
 interface BreadCrumbsProps {
   text: ReactNode
@@ -16,9 +16,9 @@ export const Breadcrumbs = (props: { items: BreadCrumbsProps[] }) => {
       {props.items.map((item) => {
         if (item.href) {
           return (
-            <NavLink key={item.id} to={item.href}>
+            <RouteLink key={item.id} to={item.href}>
               <GBreadcrumbs.Item >{item.text}</GBreadcrumbs.Item>
-            </NavLink>
+            </RouteLink>
           );
         } else {
           return (

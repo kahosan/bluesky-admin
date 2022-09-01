@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Menu, MenuItem } from '../menu';
 import { Container } from '../container';
-import { NavLink } from '../nav-link';
+import { RouteLink } from '../route-link';
 import { FlexLogo } from '../flex-brand';
 import { ThemeToggle } from './toggle-theme';
 
@@ -48,7 +48,7 @@ export const AvatarMenu = (props: { name: string }) => {
         content={
           <>
             <MenuItem>
-              <NavLink to="/">Dashboard</NavLink>
+              <RouteLink to="/">Dashboard</RouteLink>
             </MenuItem>
             <MenuItem>
               <Link
