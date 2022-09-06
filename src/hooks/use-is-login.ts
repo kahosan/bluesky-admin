@@ -1,7 +1,10 @@
-import { FLEX_API_TOKEN_KEY, IS_COMPANY_KEY } from '@/lib/constant';
+import { useFlexApiToken } from './use-flex-api-token';
+import { useIsCompany } from './use-is-company';
 
 export const useIsLogin = () => {
-  const isLogin = localStorage.getItem(IS_COMPANY_KEY) || localStorage.getItem(FLEX_API_TOKEN_KEY);
+  const [ct] = useIsCompany();
+  const [ft] = useFlexApiToken();
+  const isLogin = ct || ft;
 
   return isLogin;
 };

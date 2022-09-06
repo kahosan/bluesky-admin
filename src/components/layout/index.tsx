@@ -20,7 +20,7 @@ export const AvatarMenu = (props: { name: string }) => {
   const { setToast } = useToasts();
   const navigate = useNavigate();
 
-  const logout = useCallback(() => {
+  const handleLogoutClick = useCallback(() => {
     setFlexToken(null);
     setIsCompanyToken(null);
 
@@ -31,10 +31,6 @@ export const AvatarMenu = (props: { name: string }) => {
     });
     navigate('/login');
   }, [setFlexToken, setIsCompanyToken, navigate, setToast]);
-
-  const handleLogoutClick = useCallback(() => {
-    logout();
-  }, [logout]);
 
   return (
     <div className='flex items-center children:!ml-3'>
