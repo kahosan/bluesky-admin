@@ -10,7 +10,7 @@ export const AuthFailed = () => {
   });
 
   return (
-    <Modal visible={true}>
+    <Modal visible>
       <Modal.Title>没有权限</Modal.Title>
       <Modal.Content className="!text-center">
         <Text p>三秒后将跳转到登入页面</Text>

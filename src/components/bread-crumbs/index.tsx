@@ -17,14 +17,13 @@ export const Breadcrumbs = (props: { items: BreadCrumbsProps[] }) => {
         if (item.href) {
           return (
             <RouteLink key={item.id} to={item.href}>
-              <GBreadcrumbs.Item >{item.text}</GBreadcrumbs.Item>
+              <GBreadcrumbs.Item>{item.text}</GBreadcrumbs.Item>
             </RouteLink>
           );
-        } else {
-          return (
-            <GBreadcrumbs.Item key={item.id}>{item.text}</GBreadcrumbs.Item>
-          );
         }
+        return (
+          <GBreadcrumbs.Item key={item.id}>{item.text}</GBreadcrumbs.Item>
+        );
       })}
     </GBreadcrumbs>
   );

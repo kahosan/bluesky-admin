@@ -1,6 +1,11 @@
 import { type Dispatch, useEffect, useState } from 'react';
 
-const queriesMap = new Map<string, { mql: MediaQueryList; dispatchers: Set<Dispatch<boolean>>; listener: () => void }>();
+const queriesMap = new Map<
+string, {
+  mql: MediaQueryList
+  dispatchers: Set<Dispatch<boolean>>
+  listener: () => void
+}>();
 
 type QueryStateSetter = (matches: boolean) => void;
 
@@ -17,7 +22,6 @@ const querySubscribe = (query: string, setState: QueryStateSetter) => {
     if (mql.addEventListener) {
       mql.addEventListener('change', listener, { passive: true });
     } else {
-      // 兼容
       mql.addListener(listener);
     }
 
@@ -45,9 +49,7 @@ const queryUnsubscribe = (query: string, setState: QueryStateSetter): void => {
     if (!dispatchers.size) {
       queriesMap.delete(query);
 
-      if (mql.removeEventListener) {
-        mql.removeEventListener('change', listener);
-      } else mql.removeListener(listener);
+      if (mql.removeEventListener) { mql.removeEventListener('change', listener); } else mql.removeListener(listener);
     }
   }
 };

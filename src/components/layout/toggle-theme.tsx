@@ -30,7 +30,7 @@ export const ThemeToggle = () => {
         value={themeType}
         onChange={handleChange}
         title="Switch Themes"
-        className='!w-120px !min-w-120px'
+        className="!w-120px !min-w-120px"
       >
         <Select.Option value="light">
           <span className="w-auto h-18px flex content-between items-center svg-mr-10px svg-ml-2px">

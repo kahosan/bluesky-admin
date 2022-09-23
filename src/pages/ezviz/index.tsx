@@ -55,12 +55,12 @@ export const EzvizPage = () => {
 
   return (
     <Layout name="co">
-      <div className='header'>
+      <div className="header">
         <Breadcrumbs items={[
           { text: 'Home', id: 'home', href: '/' },
           { text: 'Ezviz', id: 'ezviz' }
-        ]}/>
-        <h3 className='mt-5'>设备列表</h3>
+        ]} />
+        <h3 className="mt-5">设备列表</h3>
       </div>
       <div style={{
         padding: theme.layout.gap,

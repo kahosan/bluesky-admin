@@ -7,22 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { Menu, MenuItem } from '../menu';
 import { Container } from '../container';
 import { RouteLink } from '../route-link';
-import { FlexLogo } from '../flex-brand';
 import { ThemeToggle } from './toggle-theme';
 
-import { useFlexApiToken } from '@/hooks/use-flex-api-token';
-import { useIsCompany } from '@/hooks/use-is-company';
+import { useToken } from '@/hooks/use-token';
 
 export const AvatarMenu = (props: { name: string }) => {
-  const [, setFlexToken] = useFlexApiToken();
-  const [, setIsCompanyToken] = useIsCompany();
+  const [, setToken] = useToken();
 
   const { setToast } = useToasts();
   const navigate = useNavigate();
 
   const handleLogoutClick = useCallback(() => {
-    setFlexToken(null);
-    setIsCompanyToken(null);
+    setToken(null);
 
     setToast({
       type: 'success',
@@ -30,15 +26,15 @@ export const AvatarMenu = (props: { name: string }) => {
       delay: 3000
     });
     navigate('/login');
-  }, [setFlexToken, setIsCompanyToken, navigate, setToast]);
+  }, [setToken, navigate, setToast]);
 
   return (
     <div className='flex items-center children:!ml-3'>
       <Link href='mailto:kahosan@outlook.com'>
-        <Mail size='18'/>
+        <Mail size='18' />
       </Link>
       <Link href="https://github.com/kahosan" target='_blank' rel='external'>
-        <Github size='18'/>
+        <Github size='18' />
       </Link>
       <Menu
         content={
@@ -85,8 +81,6 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const [isCompany] = useIsCompany();
-
   enum routeWithCompany {
     '/company/index' = 1,
     '/company/rootcloud'
@@ -122,14 +116,10 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
             className='flex items-center content-between h-100% my-0 mx-auto select-none'
           >
             <div className='flex flex-1 items-baseline content-start'>
-              {
-                isCompany
-                  ? (<Tabs initialValue='1' hideBorder hideDivider leftSpace='0' className='flex children:!overflow-unset' onChange={id => handleTabsChange(id) }>
-                    <Tabs.Item label='Ezviz' value='1'/>
-                    <Tabs.Item label='RootCloud' value='2'/>
-                  </Tabs>)
-                  : <FlexLogo size='24' />
-              }
+              <Tabs initialValue='1' hideBorder hideDivider leftSpace='0' className='flex children:!overflow-unset' onChange={id => handleTabsChange(id)}>
+                <Tabs.Item label='Ezviz' value='1' />
+                <Tabs.Item label='RootCloud' value='2' />
+              </Tabs>
             </div>
             <AvatarMenu name={props.name} />
           </div>

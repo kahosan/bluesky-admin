@@ -9,7 +9,7 @@ interface tableProps<T> {
 
 const DataTable = <T extends TableDataItemBase>({ data, columns }: tableProps<T>) => {
   return (
-    <div className='overflow-x-auto '>
+    <div className="overflow-x-auto ">
       <Table data={data}>
         {columns.map(col => (
           <Table.Column
@@ -17,12 +17,11 @@ const DataTable = <T extends TableDataItemBase>({ data, columns }: tableProps<T>
             prop={col.prop}
             label={col.label}
             width={col.width}
-            className='children:min-w-20'
+            className="children:min-w-20"
           >
             {col.children}
           </Table.Column>
-        )
-        )}
+        ))}
       </Table>
     </div>
   );

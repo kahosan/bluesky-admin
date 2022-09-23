@@ -9,59 +9,24 @@ export class HTTPError extends Error {
   }
 }
 
-export const fetcherWithLoginForFlex = async <T>(
-  client_id: string,
-  client_secret: string
-): Promise<T> => {
-  const body = new URLSearchParams({
-    scope: 'fbox',
-    client_id,
-    client_secret,
-    grant_type: 'client_credentials'
+export const fetcherWithAuthorizationForCompany = async <T>(key: string, options?: ResponseInit): Promise<T> => {
+  const headers = new Headers({
+    'Content-Type': 'application/json'
   });
 
-  const res = await fetch('https://flex-proxy.kahosan.workers.dev/idserver/core/connect/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw new HTTPError(
-      data.message || 'An error occurred while fetching the data',
-      data,
-      res.status
-    );
+  if (options?.headers) {
+    const incomingHeaders = new Headers();
+    incomingHeaders.forEach((value, key) => headers.append(key, value));
   }
 
-  return data;
-};
-
-export const fetcherWithLoginForCompany = async <T>(
-  username: string,
-  password: string
-): Promise<T> => {
-  const res = await fetch('http://localhost:8080/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ username, password }),
-    credentials: 'include'
-  });
-
+  const res = await fetch(
+    new URL(key, 'http://localhost:8080'),
+    { method: 'POST', headers, ...options, credentials: 'include' }
+  );
   const data = await res.json();
 
   if (!res.ok) {
-    throw new HTTPError(
-      data.message || 'An error occurred while fetching the data',
-      data,
-      res.status
-    );
+    throw new HTTPError('fetcherError', data, res.status);
   }
 
   return data;
