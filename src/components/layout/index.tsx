@@ -81,25 +81,25 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  enum routeWithCompany {
-    '/company/index' = 1,
-    '/company/rootcloud'
+  enum routeNav {
+    '/ezviz' = 1,
+    '/rootcloud'
     // todo
   }
 
   const handleTabsChange = useCallback((id: string) => {
     switch (id) {
       case '1':
-        navigate(routeWithCompany['1']);
+        navigate(routeNav['1']);
         break;
       case '2':
-        navigate(routeWithCompany['2']);
+        navigate(routeNav['2']);
         break;
       default:
         console.warn('route is not found, id: ', id);
         break;
     }
-  }, [routeWithCompany, navigate]);
+  }, [routeNav, navigate]);
 
   return (
     <>
@@ -116,7 +116,14 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
             className='flex items-center content-between h-100% my-0 mx-auto select-none'
           >
             <div className='flex flex-1 items-baseline content-start'>
-              <Tabs initialValue='1' hideBorder hideDivider leftSpace='0' className='flex children:!overflow-unset' onChange={id => handleTabsChange(id)}>
+              <Tabs
+                initialValue='1'
+                hideBorder
+                hideDivider
+                leftSpace='0'
+                className='flex children:!overflow-unset'
+                onChange={id => handleTabsChange(id)}
+              >
                 <Tabs.Item label='Ezviz' value='1' />
                 <Tabs.Item label='RootCloud' value='2' />
               </Tabs>
