@@ -90,10 +90,10 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const handleTabsChange = useCallback((id: string) => {
     switch (id) {
       case '1':
-        navigate(routeNav['1']);
+        navigate(routeNav[id]);
         break;
       case '2':
-        navigate(routeNav['2']);
+        navigate(routeNav[id]);
         break;
       default:
         console.warn('route is not found, id: ', id);
