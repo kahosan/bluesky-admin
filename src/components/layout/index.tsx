@@ -106,7 +106,8 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
       <div
         style={{
           backgroundColor: theme.palette.background,
-          boxShadow: `0 1px 2px ${theme.palette.accents_2}`
+          boxShadow: `0 1px 2px ${theme.palette.accents_2}`,
+          marginRight: 'calc(100% - 100vw)'
         }}
         className='h-16 z-999 fixed top-0 right-0 left-0'
       >
