@@ -9,7 +9,7 @@ export class HTTPError extends Error {
   }
 }
 
-export const fetcherWithAuthorizationForCompany = async <T>(key: string, options?: ResponseInit): Promise<T> => {
+export const fetcherWithAuthorization = async <T>(key: string, options?: ResponseInit): Promise<T> => {
   const headers = new Headers({
     'Content-Type': 'application/json'
   });
