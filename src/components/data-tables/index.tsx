@@ -4,7 +4,7 @@ import type { TableColumns, TableData } from './types';
 
 interface tableProps<T> {
   columns: TableColumns
-  data: TableData<T>
+  data: TableData<T> | undefined
 }
 
 const DataTable = <T extends TableDataItemBase>({ data, columns }: tableProps<T>) => {
@@ -17,7 +17,7 @@ const DataTable = <T extends TableDataItemBase>({ data, columns }: tableProps<T>
             prop={col.prop}
             label={col.label}
             width={col.width}
-            className="children:min-w-20"
+            className="whitespace-nowrap"
           >
             {col.children}
           </Table.Column>
