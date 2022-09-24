@@ -46,7 +46,7 @@ const CompanyForm = () => {
       };
 
       async function fetcher<UserResponse>(username: string, password: string): Promise<UserResponse> {
-        const res = await fetch(new URL('/login', 'http://localhost:3000'), {
+        const res = await fetch(new URL('/login', 'http://localhost:8080'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ const CompanyForm = () => {
               delay: 2000
             });
 
-            navigate('/company/index');
+            navigate('/');
           } else {
             handleLoginError();
           }
