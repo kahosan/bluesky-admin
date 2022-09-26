@@ -1,11 +1,12 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { ProtectedLayoutForCo } from './protected-router';
+import { ProtectedLayout } from './protected-router';
 
 import { LoginPage } from '@/pages/login';
 import { NotFoundError } from '@/pages/404';
 
 import { EzvizPage } from '@/pages/ezviz';
+import { CameraPlayer } from '@/pages/ezviz/camera-player';
 
 import { useToken } from '@/hooks/use-token';
 
@@ -16,13 +17,12 @@ export const Routers = () => {
 
   return (
     <Routes>
-      <Route path="/" element={isLogin ? <EzvizPage /> : <AuthFailed />} />
-      <Route element={<ProtectedLayoutForCo />}>
+      <Route path="/" element={isLogin ? <Navigate to="/ezviz" /> : <AuthFailed />} />
+      <Route element={<ProtectedLayout />}>
         <Route path="/ezviz" element={<EzvizPage />} />
+        <Route path="/ezviz/live/:deviceSerial" element={<CameraPlayer />} />
       </Route>
-
-      <Route path="/login" element={isLogin ? <EzvizPage /> : <LoginPage />} />
-
+      <Route path="login" element={isLogin ? <Navigate to="/ezviz" /> : <LoginPage />} />
       <Route path="*" element={<NotFoundError title="This page could not be found." />} />
     </Routes>
   );

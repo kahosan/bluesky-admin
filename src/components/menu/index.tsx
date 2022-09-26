@@ -1,5 +1,5 @@
 import { Popover, useTheme } from '@geist-ui/core';
-import React from 'react';
+import type React from 'react';
 
 interface MenuProps {
   children?: React.ReactNode

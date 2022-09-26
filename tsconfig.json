@@ -29,7 +29,7 @@
   },
   "include": [
     "src",
-    "style-d.ts",
+    "location.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

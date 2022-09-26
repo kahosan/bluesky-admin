@@ -1,3 +1,5 @@
+import type React from 'react';
+
 export type TableColumns = Array<{
   prop: string
   label: string

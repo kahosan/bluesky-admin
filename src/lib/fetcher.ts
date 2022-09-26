@@ -20,8 +20,26 @@ export const fetcherWithAuthorization = async <T>(key: string, options?: Respons
   }
 
   const res = await fetch(
-    new URL(key, 'http://localhost:8080'),
-    { method: 'POST', headers, ...options, credentials: 'include' }
+    key,
+    { method: 'POST', headers, ...options, credentials: 'same-origin' }
+  );
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new HTTPError('fetcherError', data, res.status);
+  }
+
+  return data;
+};
+
+export const fetcherWithSWRMutation = async <T>(key: string, { arg }: { arg: Record<string, string> }): Promise<T> => {
+  const headers = new Headers({
+    'Content-Type': 'application/json'
+  });
+
+  const res = await fetch(
+    key + new URLSearchParams(arg),
+    { method: 'POST', headers, credentials: 'same-origin' }
   );
   const data = await res.json();
 

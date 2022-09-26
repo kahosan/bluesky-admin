@@ -1,6 +1,7 @@
 import { Link, Popover, Tabs, Text, useTheme, useToasts } from '@geist-ui/core';
 import { Github, Mail } from '@geist-ui/icons';
 
+import type React from 'react';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,12 +30,12 @@ export const AvatarMenu = (props: { name: string }) => {
   }, [setToken, navigate, setToast]);
 
   return (
-    <div className='flex items-center children:!ml-3'>
-      <Link href='mailto:kahosan@outlook.com'>
-        <Mail size='18' />
+    <div className="flex items-center children:!ml-3">
+      <Link href="mailto:kahosan@outlook.com">
+        <Mail size="18" />
       </Link>
-      <Link href="https://github.com/kahosan" target='_blank' rel='external'>
-        <Github size='18' />
+      <Link href="https://github.com/kahosan" target="_blank" rel="external">
+        <Github size="18" />
       </Link>
       <Menu
         content={
@@ -109,31 +110,31 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
           boxShadow: `0 1px 2px ${theme.palette.accents_2}`,
           marginRight: 'calc(100% - 100vw)'
         }}
-        className='h-16 z-999 fixed top-0 right-0 left-0'
+        className="h-16 z-999 fixed top-0 right-0 left-0"
       >
-        <nav className='h-64px'>
+        <nav className="h-64px">
           <div
             style={{ maxWidth: `${theme.layout.pageWidthWithMargin}`, padding: `0 ${theme.layout.gap}` }}
-            className='flex items-center content-between h-100% my-0 mx-auto select-none'
+            className="flex items-center content-between h-100% my-0 mx-auto select-none"
           >
-            <div className='flex flex-1 items-baseline content-start'>
+            <div className="flex flex-1 items-baseline content-start">
               <Tabs
-                initialValue='1'
+                initialValue="1"
                 hideBorder
                 hideDivider
-                leftSpace='0'
-                className='flex children:!overflow-unset'
+                leftSpace="0"
+                className="flex children:!overflow-unset"
                 onChange={id => handleTabsChange(id)}
               >
-                <Tabs.Item label='Ezviz' value='1' />
-                <Tabs.Item label='RootCloud' value='2' />
+                <Tabs.Item label="Ezviz" value="1" />
+                <Tabs.Item label="RootCloud" value="2" />
               </Tabs>
             </div>
             <AvatarMenu name={props.name} />
           </div>
         </nav>
       </div>
-      <Container maxWidth={theme.layout.pageWidthWithMargin} className='mt-64px min-h-[calc(100vh-64px)]'>
+      <Container maxWidth={theme.layout.pageWidthWithMargin} className="mt-64px min-h-[calc(100vh-64px)]">
         {props.children}
       </Container>
     </>

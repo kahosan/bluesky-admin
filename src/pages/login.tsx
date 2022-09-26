@@ -46,7 +46,7 @@ const CompanyForm = () => {
       };
 
       async function fetcher<UserResponse>(username: string, password: string): Promise<UserResponse> {
-        const res = await fetch(new URL('/login', 'http://localhost:8080'), {
+        const res = await fetch('/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
