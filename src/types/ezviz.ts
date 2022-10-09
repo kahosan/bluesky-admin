@@ -1,13 +1,23 @@
 export interface EzvizCameraResp {
+  deviceSerial: string
+  deviceName: string
+  model: string
+  status: string
+  isEncrypt: number
+  category: string
+  parentCategory: string
+  updateTime: number
+  addTime: string
+}
+
+export interface EzvizCameraSearchResp {
   msg: string
   code: string
-  data: {
-    deviceSerial: string
-    deviceName: string
-    model: string
-    status: string
-    isEncrypt?: string
-    category?: string
+  data: EzvizCameraResp[]
+  page: {
+    total: number
+    size: number
+    page: number
   }
 }
 
