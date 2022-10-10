@@ -50,7 +50,7 @@ export const CameraPlayer = () => {
               : data
                 ? (
                   <ReactPlayer
-                    url={data ? data.data.url : ''}
+                    url={data.data.url}
                     controls
                     playing={false}
                     width="100%"
@@ -68,7 +68,6 @@ export const CameraPlayer = () => {
           style={{
             background: theme.palette.accents_2,
             borderRadius: '10px'
-
           }}
           className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
         >
