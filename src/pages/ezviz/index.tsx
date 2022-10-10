@@ -177,7 +177,12 @@ export const EzvizPage = () => {
         borderRadius: '5px',
         minHeight: '20rem'
       }}>
-        <EzvizTools update={newData => (data ? mutate(newData, false) : undefined)} />
+        <EzvizTools
+          update={(newData) => {
+            setNVRProps([]);
+            return data ? mutate(newData, false) : undefined;
+          }}
+        />
         {
           error || (data ? data.code !== '200' : undefined)
             ? <NotFoundError title="请求错误" height="h-20rem" />
