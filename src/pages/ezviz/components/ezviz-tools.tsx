@@ -30,7 +30,7 @@ export const EzvizTools = ({ update }: EzvizToolsProps) => {
         });
       }
 
-      // 后端还没实现一些字段
+      // TODO 后端还没实现一些字段
       const d = data.data as unknown as EzvizCameraResp;
       d.addTime = `${d.updateTime}`;
       update({
