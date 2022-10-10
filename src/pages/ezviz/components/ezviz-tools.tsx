@@ -16,10 +16,11 @@ interface EzvizToolsProps {
 export const EzvizTools = ({ update }: EzvizToolsProps) => {
   const { setToast } = useToasts();
   const [search, setSearch] = useState('');
-  const { trigger } = useTrigger<EzvizCameraSearchResp, HTTPError>('/api/ezviz/search?');
+
+  const { trigger } = useTrigger<EzvizCameraSearchResp, HTTPError>('/api/camera/ezviz/info?');
 
   const handleSearch = async () => {
-    const data = await trigger(search);
+    const data = await trigger({ deviceSerial: search });
 
     if (data) {
       if (data.code !== '200') {
@@ -32,7 +33,7 @@ export const EzvizTools = ({ update }: EzvizToolsProps) => {
 
       // TODO 后端还没实现一些字段
       const d = data.data as unknown as EzvizCameraResp;
-      d.addTime = `${d.updateTime}`;
+      d.addTime = d.updateTime;
       update({
         ...data,
         data: [d],

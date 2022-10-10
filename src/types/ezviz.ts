@@ -6,7 +6,7 @@ export interface EzvizCameraResp {
   isEncrypt: number
   category: string
   parentCategory: string
-  updateTime: number
+  updateTime: string
   addTime: string
 }
 
