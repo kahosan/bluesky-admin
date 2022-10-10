@@ -37,7 +37,7 @@ const NVRTableColumns = [
   }
 ];
 
-export const NVRTables = (props: { deviceSerial: string; status: string; addTime: string }) => {
+export const NVRTables = (props: { deviceSerial: string; status: JSX.Element; addTime: string }) => {
   const { data, error, mutate } = useEzvizList<EzvizNVRCameraListResp>(`/api/camera/ezviz/list/channel?deviceSerial=${props.deviceSerial}`);
 
   // 序列化 data 数据
@@ -61,11 +61,7 @@ export const NVRTables = (props: { deviceSerial: string; status: string; addTime
         </>
       ),
       addTime: props.addTime,
-      status: (
-        props.status
-          ? <><span className="bg-#52c41a rounded-50% p-0.75 mr-2" />在线</>
-          : <><span className="bg-#d9d9d9 rounded-50% p-0.75 mr-2" />离线</>
-      ),
+      status: props.status,
       play: (
         <Link to={`/ezviz/live/${item.deviceSerial}?${new URLSearchParams({ deviceName: item.deviceName as string, channelNo: item.channelNo ?? '1' })}`}>
           <Button scale={0.6} auto>点击播放</Button>

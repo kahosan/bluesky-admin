@@ -2,12 +2,12 @@ export interface EzvizCameraResp {
   deviceSerial: string
   deviceName: string
   model: string
-  status: string
+  status: number
   isEncrypt: number
   category: string
   parentCategory: string
-  updateTime: string
-  addTime: string
+  updateTime: number
+  addTime: number | string
 }
 
 export interface EzvizCameraSearchResp {
@@ -42,8 +42,8 @@ export interface EzvizTableData {
   deviceSerial: string | JSX.Element
   deviceName: string | JSX.Element
   deviceType?: string
-  status: string | JSX.Element
-  addTime: string
+  status: number | JSX.Element
+  addTime: number | string
   parentCategory?: string | JSX.Element
   channelName?: string | JSX.Element
   channelNo?: string
