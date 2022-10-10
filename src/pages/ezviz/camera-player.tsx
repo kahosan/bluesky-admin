@@ -1,6 +1,5 @@
 import { Button, Loading, useTheme } from '@geist-ui/core';
 
-import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -15,15 +14,13 @@ import { useCameraLive } from '@/hooks/use-camera-live';
 export const CameraPlayer = () => {
   const theme = useTheme();
 
-  const [playError, setPlayError] = useState(false);
-
   const { deviceSerial } = useParams<{ deviceSerial: string }>();
   const [searchParams] = useSearchParams();
   const deviceName = searchParams.get('deviceName');
   const channelNo = searchParams.get('channelNo');
 
   const { data, error } = useCameraLive(
-    `/api/camera/ezviz/live?deviceSerial=${deviceSerial}&protocol=${2}&quality=${1}&channelNo=${channelNo || '1'}`
+    `/api/camera/ezviz/live?deviceSerial=${deviceSerial}&protocol=${4}&quality=${1}&channelNo=${channelNo || '1'}`
   );
 
   return (
@@ -48,7 +45,7 @@ export const CameraPlayer = () => {
       >
         <div className="w-100% relative">
           {
-            error || (data ? data.code !== '200' : undefined) || playError
+            error || (data ? data.code !== '200' : undefined)
               ? <NotFoundError title="加载错误" height="h-70" />
               : data
                 ? (
@@ -59,13 +56,9 @@ export const CameraPlayer = () => {
                     width="100%"
                     height="auto"
                     playsinline
-                    config={{
-                      file: { forceHLS: true }
-                    }}
-                    onError={() => setTimeout(() => setPlayError(true), 4000)}
                   />
                 )
-                : <Loading />
+                : <Loading className="h-70" />
           }
         </div>
         <div
