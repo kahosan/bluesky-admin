@@ -55,7 +55,7 @@ export const CameraPlayer = () => {
                   <ReactPlayer
                     url={data.data.url}
                     controls
-                    playing={false}
+                    playing
                     width="100%"
                     height="auto"
                     playsinline
