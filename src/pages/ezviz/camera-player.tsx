@@ -1,5 +1,6 @@
 import { Button, Loading, useTheme } from '@geist-ui/core';
 
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -13,6 +14,8 @@ import { useCameraLive } from '@/hooks/use-camera-live';
 
 export const CameraPlayer = () => {
   const theme = useTheme();
+
+  const [playError, setPlayError] = useState(false);
 
   const { deviceSerial } = useParams<{ deviceSerial: string }>();
   const [searchParams] = useSearchParams();
@@ -45,7 +48,7 @@ export const CameraPlayer = () => {
       >
         <div className="w-100% relative">
           {
-            error || (data ? data.code !== '200' : undefined)
+            error || (data ? data.code !== '200' : undefined) || playError
               ? <NotFoundError title="加载错误" height="h-70" />
               : data
                 ? (
@@ -59,6 +62,7 @@ export const CameraPlayer = () => {
                     config={{
                       file: { forceHLS: true }
                     }}
+                    onError={() => setTimeout(() => setPlayError(true), 4000)}
                   />
                 )
                 : <Loading />
