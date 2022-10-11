@@ -5,6 +5,7 @@ import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
 
+import { Helmet } from 'react-helmet-async';
 import { NotFoundError } from '../404';
 
 import { Layout } from '@/components/layout';
@@ -100,53 +101,58 @@ export const CameraPlayer = () => {
   );
 
   return (
-    <Layout name="cameraPlay">
-      <div className="mb-4 flex justify-between">
-        <Breadcrumbs
-          items={[
-            { text: 'Home', id: 'home', href: '/' },
-            { text: 'Ezviz', id: 'ezviz', href: '/ezviz' },
-            { text: deviceSerial, id: 'ezviz-camera-play' }
-          ]}
-        />
-        <h3 className="my-auto mr-5">{deviceName}</h3>
-      </div>
-      <div
-        style={{
-          padding: '1.25rem',
-          background: theme.palette.accents_1,
-          borderRadius: '10px'
-        }}
-        className="flex flex-col md:flex-row"
-      >
-        <div className="w-100% relative">
-          {
-            error || (data ? data.code !== '200' : undefined)
-              ? <NotFoundError title="加载错误" height="h-70" />
-              : data
-                ? (
-                  <ReactPlayer
-                    url={data.data.url}
-                    controls
-                    playing
-                    width="100%"
-                    height="auto"
-                    playsinline
-                  />
-                )
-                : <Loading className="h-70" />
-          }
+    <>
+      <Helmet>
+        <title>{deviceName || '摄像头'}</title>
+      </Helmet>
+      <Layout name="cameraPlay">
+        <div className="mb-4 flex justify-between">
+          <Breadcrumbs
+            items={[
+              { text: 'Home', id: 'home', href: '/' },
+              { text: 'Ezviz', id: 'ezviz', href: '/ezviz' },
+              { text: deviceSerial, id: 'ezviz-camera-play' }
+            ]}
+          />
+          <h3 className="my-auto mr-5">{deviceName}</h3>
         </div>
         <div
           style={{
-            background: theme.palette.accents_2,
+            padding: '1.25rem',
+            background: theme.palette.accents_1,
             borderRadius: '10px'
           }}
-          className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
+          className="flex flex-col md:flex-row"
         >
-          <ControlMenu deviceSerial={deviceSerial || ''} />
+          <div className="w-100% relative">
+            {
+              error || (data ? data.code !== '200' : undefined)
+                ? <NotFoundError title="加载错误" height="h-70" />
+                : data
+                  ? (
+                    <ReactPlayer
+                      url={data.data.url}
+                      controls
+                      playing
+                      width="100%"
+                      height="auto"
+                      playsinline
+                    />
+                  )
+                  : <Loading className="h-70" />
+            }
+          </div>
+          <div
+            style={{
+              background: theme.palette.accents_2,
+              borderRadius: '10px'
+            }}
+            className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
+          >
+            <ControlMenu deviceSerial={deviceSerial || ''} />
+          </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 };

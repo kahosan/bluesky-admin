@@ -4,6 +4,7 @@ import { ChevronLeftCircleFill, ChevronRightCircleFill, Edit } from '@geist-ui/i
 import { useCallback, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 import { EzvizTable } from './components/ezviz-table';
 import { EzvizTools } from './components/ezviz-tools';
@@ -160,64 +161,69 @@ export const EzvizPage = () => {
   }, [channelView]);
 
   return (
-    <Layout name="aya">
-      <a href="asd" />
-      <div>
-        <Breadcrumbs
-          items={[
-            { text: 'Home', id: 'home', href: '/' },
-            { text: 'Ezviz', id: 'ezviz' }
-          ]}
-        />
-        <h3 className="mt-5">设备列表</h3>
-      </div>
-      <div style={{
-        padding: theme.layout.gapHalf,
-        background: theme.palette.accents_1,
-        borderRadius: '5px',
-        minHeight: '20rem'
-      }}>
-        <EzvizTools
-          update={(newData) => {
-            setNVRProps([]);
-            return data ? mutate(newData, false) : undefined;
-          }}
-        />
-        {
-          error || (data ? data.code !== '200' : undefined)
-            ? <NotFoundError title="请求错误" height="h-20rem" />
-            : data
-              ? (
-                <EzvizTable
-                  serializationFn={serializationData}
-                  data={data.data}
-                  columns={EzvizTableColumns}
-                  update={newData => mutate({ ...data, data: newData }, false)}
-                  TableRowClassNameHandler={(rowData: EzvizTableData) => rowData.className ?? ''}
-                />
-              )
-              : <div className="mt-30"><Loading /></div>
-        }
-        <div className="mt-5 mr-5 text-right">
-          <Pagination count={data ? Math.floor(data.page.total / data.page.size) + 1 : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
-            <Pagination.Next><ChevronRightCircleFill /></Pagination.Next>
-            <Pagination.Previous><ChevronLeftCircleFill /></Pagination.Previous>
-          </Pagination>
+    <>
+      <Helmet>
+        <title>萤石云摄像头列表</title>
+      </Helmet>
+      <Layout name="aya">
+        <a href="asd" />
+        <div>
+          <Breadcrumbs
+            items={[
+              { text: 'Home', id: 'home', href: '/' },
+              { text: 'Ezviz', id: 'ezviz' }
+            ]}
+          />
+          <h3 className="mt-5">设备列表</h3>
         </div>
-        {
-          nvrProps.map((item) => {
-            return ReactDOM.createPortal(
-              <NVRTables
-                deviceSerial={item.deviceSerial}
-                status={item.status}
-                addTime={item.addTime}
-              />,
-              tdRef.current[item.deviceSerial],
-              item.deviceSerial
-            );
-          })
-        }
-      </div>
-    </Layout>
+        <div style={{
+          padding: theme.layout.gapHalf,
+          background: theme.palette.accents_1,
+          borderRadius: '5px',
+          minHeight: '20rem'
+        }}>
+          <EzvizTools
+            update={(newData) => {
+              setNVRProps([]);
+              return data ? mutate(newData, false) : undefined;
+            }}
+          />
+          {
+            error || (data ? data.code !== '200' : undefined)
+              ? <NotFoundError title="请求错误" height="h-20rem" />
+              : data
+                ? (
+                  <EzvizTable
+                    serializationFn={serializationData}
+                    data={data.data}
+                    columns={EzvizTableColumns}
+                    update={newData => mutate({ ...data, data: newData }, false)}
+                    TableRowClassNameHandler={(rowData: EzvizTableData) => rowData.className ?? ''}
+                  />
+                )
+                : <div className="mt-30"><Loading /></div>
+          }
+          <div className="mt-5 mr-5 text-right">
+            <Pagination count={data ? Math.floor(data.page.total / data.page.size) + 1 : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
+              <Pagination.Next><ChevronRightCircleFill /></Pagination.Next>
+              <Pagination.Previous><ChevronLeftCircleFill /></Pagination.Previous>
+            </Pagination>
+          </div>
+          {
+            nvrProps.map((item) => {
+              return ReactDOM.createPortal(
+                <NVRTables
+                  deviceSerial={item.deviceSerial}
+                  status={item.status}
+                  addTime={item.addTime}
+                />,
+                tdRef.current[item.deviceSerial],
+                item.deviceSerial
+              );
+            })
+          }
+        </div>
+      </Layout>
+    </>
   );
 };

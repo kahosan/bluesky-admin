@@ -139,28 +139,33 @@ const LoginForm = () => {
 
 export const LoginPage = () => {
   return (
-    <Container maxWidth="37rem">
-      <div className="h-[calc(100vh-200px)] flex justify-center  flex-col">
-        <Helmet>
-          <title>Log in</title>
-        </Helmet>
-        <Text h2 className="mx-auto">
-          Bluesky Tools
-        </Text>
-        <Tabs initialValue="1" hideDivider>
-          <Tabs.Item
-            label={
-              <>
-                <Tool size="15" />
-                Company
-              </>
-            }
-            value="1"
-          >
-            <LoginForm />
-          </Tabs.Item>
-        </Tabs>
-      </div>
-    </Container>
+    <>
+      <Helmet>
+        <title>登入</title>
+      </Helmet>
+      <Container maxWidth="37rem">
+        <div className="h-[calc(100vh-200px)] flex justify-center  flex-col">
+          <Helmet>
+            <title>Log in</title>
+          </Helmet>
+          <Text h2 className="mx-auto">
+            Bluesky Tools
+          </Text>
+          <Tabs initialValue="1" hideDivider>
+            <Tabs.Item
+              label={
+                <>
+                  <Tool size="15" />
+                  Company
+                </>
+              }
+              value="1"
+            >
+              <LoginForm />
+            </Tabs.Item>
+          </Tabs>
+        </div>
+      </Container>
+    </>
   );
 };
