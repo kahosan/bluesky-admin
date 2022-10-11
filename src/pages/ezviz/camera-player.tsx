@@ -17,8 +17,8 @@ const ControlMenu = (props: { deviceSerial: string }) => {
   const { setVisible, bindings } = useModal();
   const [encrypt, setEncrypt] = useState(false);
 
-  const { trigger: onEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/on');
-  const { trigger: offEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/off');
+  const { trigger: onEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/on?');
+  const { trigger: offEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/off?');
 
   const onEncrypt = async () => {
     const data = await onEncryptTrigger({ deviceSerial: props.deviceSerial });
