@@ -28,8 +28,17 @@ const ControlMenu = (props: { deviceSerial: string }) => {
     const data = await offEncryptTrigger({ deviceSerial: props.deviceSerial });
   };
 
-  const createModal = (encrypt: boolean) => {
-    return (
+  const modalType = (type: 'encrypt' | 'decrypt') => {
+    setEncrypt(type === 'encrypt');
+    setVisible(true);
+  };
+
+  return (
+    <>
+      <Button type="secondary-light" auto onClick={() => { modalType('decrypt'); }}>解密视频</Button>
+      <Button type="secondary-light" auto onClick={() => { modalType('encrypt'); }}>加密视频</Button>
+      <Button type="secondary-light" auto>开始录像</Button>
+      <Button type="secondary-light" auto>查看回放</Button>
       <Modal {...bindings}>
         <Modal.Title>提示</Modal.Title>
         <Modal.Content>
@@ -38,16 +47,6 @@ const ControlMenu = (props: { deviceSerial: string }) => {
         <Modal.Action passive onClick={() => setVisible(false)}>取消</Modal.Action>
         <Modal.Action onClick={encrypt ? onEncrypt : offEncrypt}>确定</Modal.Action>
       </Modal>
-    );
-  };
-
-  return (
-    <>
-      <Button type="secondary-light" auto onClick={() => { setEncrypt(false); setVisible(true); }}>解密视频</Button>
-      <Button type="secondary-light" auto onClick={() => { setEncrypt(true); setVisible(true); }}>加密视频</Button>
-      <Button type="secondary-light" auto>开始录像</Button>
-      <Button type="secondary-light" auto>查看回放</Button>
-      {createModal(encrypt)}
     </>
   );
 };
