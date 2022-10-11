@@ -11,21 +11,57 @@ import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
 import { useCameraLive } from '@/hooks/use-camera-live';
+import { useToasts } from '@/hooks/use-toasts';
 import { useTrigger } from '@/hooks/use-trigger';
 
+import type { HTTPError } from '@/lib/fetcher';
+import type { DefaultResp } from '@/types/ezviz';
+
 const ControlMenu = (props: { deviceSerial: string }) => {
+  const { setToast } = useToasts();
+
   const { setVisible, bindings } = useModal();
   const [encrypt, setEncrypt] = useState(false);
 
-  const { trigger: onEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/on?');
-  const { trigger: offEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/off?');
+  const { trigger: onEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/on?');
+  const { trigger: offEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/off?');
 
   const onEncrypt = async () => {
+    setVisible(false);
     const data = await onEncryptTrigger({ deviceSerial: props.deviceSerial });
+
+    if (data?.code === '200') {
+      setToast({
+        text: data?.msg || '加密成功',
+        type: 'success',
+        delay: 3000
+      });
+    } else {
+      setToast({
+        text: data?.msg || '加密失败',
+        type: 'error',
+        delay: 3000
+      });
+    }
   };
 
   const offEncrypt = async () => {
+    setVisible(false);
     const data = await offEncryptTrigger({ deviceSerial: props.deviceSerial });
+
+    if (data?.code === '200') {
+      setToast({
+        text: `${data?.msg || '解密成功'} 请刷新网页`,
+        type: 'success',
+        delay: 3000
+      });
+    } else {
+      setToast({
+        text: data?.msg || '解密失败',
+        type: 'error',
+        delay: 3000
+      });
+    }
   };
 
   const modalType = (type: 'encrypt' | 'decrypt') => {
