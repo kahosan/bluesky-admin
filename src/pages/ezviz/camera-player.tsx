@@ -1,5 +1,6 @@
-import { Button, Loading, useTheme } from '@geist-ui/core';
+import { Button, Loading, Modal, useModal, useTheme } from '@geist-ui/core';
 
+import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -10,6 +11,46 @@ import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
 import { useCameraLive } from '@/hooks/use-camera-live';
+import { useTrigger } from '@/hooks/use-trigger';
+
+const ControlMenu = (props: { deviceSerial: string }) => {
+  const { setVisible, bindings } = useModal();
+  const [encrypt, setEncrypt] = useState(false);
+
+  const { trigger: onEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/on');
+  const { trigger: offEncryptTrigger } = useTrigger('/api/ezviz/camera/encrypt/off');
+
+  const onEncrypt = async () => {
+    const data = await onEncryptTrigger({ deviceSerial: props.deviceSerial });
+  };
+
+  const offEncrypt = async () => {
+    const data = await offEncryptTrigger({ deviceSerial: props.deviceSerial });
+  };
+
+  const createModal = (encrypt: boolean) => {
+    return (
+      <Modal {...bindings}>
+        <Modal.Title>提示</Modal.Title>
+        <Modal.Content>
+          <p>确定要{encrypt ? '开启' : '关闭'}加密吗？</p>
+        </Modal.Content>
+        <Modal.Action passive onClick={() => setVisible(false)}>取消</Modal.Action>
+        <Modal.Action onClick={encrypt ? onEncrypt : offEncrypt}>确定</Modal.Action>
+      </Modal>
+    );
+  };
+
+  return (
+    <>
+      <Button type="secondary-light" auto onClick={() => { setEncrypt(false); setVisible(true); }}>解密视频</Button>
+      <Button type="secondary-light" auto onClick={() => { setEncrypt(true); setVisible(true); }}>加密视频</Button>
+      <Button type="secondary-light" auto>开始录像</Button>
+      <Button type="secondary-light" auto>查看回放</Button>
+      {createModal(encrypt)}
+    </>
+  );
+};
 
 export const CameraPlayer = () => {
   const theme = useTheme();
@@ -68,10 +109,7 @@ export const CameraPlayer = () => {
           }}
           className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
         >
-          <Button type="secondary-light" auto>解密视频</Button>
-          <Button type="secondary-light" auto>加密视频</Button>
-          <Button type="secondary-light" auto>开始录像</Button>
-          <Button type="secondary-light" auto>查看回放</Button>
+          <ControlMenu deviceSerial={deviceSerial || ''} />
         </div>
       </div>
     </Layout>
