@@ -60,3 +60,8 @@ export interface EzvizLiveResp {
     expireTime: string
   }
 }
+
+export interface DefaultResp {
+  code: string
+  msg: string
+}
