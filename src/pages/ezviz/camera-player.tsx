@@ -27,7 +27,7 @@ const ControlMenu = (props: { deviceSerial: string }) => {
   const { trigger: onEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/on?');
   const { trigger: offEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/off?');
 
-  const onEncrypt = async () => {
+  const onEncryptHandler = async () => {
     setVisible(false);
     const data = await onEncryptTrigger({ deviceSerial: props.deviceSerial });
 
@@ -46,7 +46,7 @@ const ControlMenu = (props: { deviceSerial: string }) => {
     }
   };
 
-  const offEncrypt = async () => {
+  const offEncryptHandler = async () => {
     setVisible(false);
     const data = await offEncryptTrigger({ deviceSerial: props.deviceSerial });
 
@@ -82,7 +82,7 @@ const ControlMenu = (props: { deviceSerial: string }) => {
           <p>确定要{encrypt ? '开启' : '关闭'}加密吗？</p>
         </Modal.Content>
         <Modal.Action passive onClick={() => setVisible(false)}>取消</Modal.Action>
-        <Modal.Action onClick={encrypt ? onEncrypt : offEncrypt}>确定</Modal.Action>
+        <Modal.Action onClick={encrypt ? onEncryptHandler : offEncryptHandler}>确定</Modal.Action>
       </Modal>
     </>
   );
