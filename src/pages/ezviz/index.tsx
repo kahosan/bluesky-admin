@@ -204,7 +204,7 @@ export const EzvizPage = () => {
                 : <div className="mt-30"><Loading /></div>
           }
           <div className="mt-5 mr-5 text-right">
-            <Pagination count={data ? Math.floor(data.page.total / data.page.size) + 1 : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
+            <Pagination count={data ? Math.ceil(data.page.total / data.page.size) : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
               <Pagination.Next><ChevronRightCircleFill /></Pagination.Next>
               <Pagination.Previous><ChevronLeftCircleFill /></Pagination.Previous>
             </Pagination>
