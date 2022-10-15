@@ -8,8 +8,8 @@ export const useTrigger = <R, E>(key: string) => {
   return useSWRMutation<R, E>(key, fetcherWithSWRMutation, {
     onError(error) {
       if (error instanceof HTTPError) {
+        const err = error.info as { message: string };
         if (error.status === 401) {
-          const err = error.info as { message: string };
           setToast({
             text: err.message,
             type: 'error',
@@ -17,7 +17,7 @@ export const useTrigger = <R, E>(key: string) => {
           });
         } else {
           setToast({
-            text: '请求服务器错误，修改失败',
+            text: `请求服务器错误 ${err.message}`,
             type: 'error',
             delay: 5000
           });
