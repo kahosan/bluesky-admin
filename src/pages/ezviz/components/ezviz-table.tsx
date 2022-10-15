@@ -41,7 +41,7 @@ export const EzvizTable = ({
   const { trigger } = useTrigger<{ code: string; msg: string }, HTTPError>('/api/camera/ezviz/rename?');
 
   const handleReName = useCallback(async (deviceSerial: string, deviceName: string) => {
-    const resp = await trigger({ deviceSerial: '123', deviceName });
+    const resp = await trigger({ deviceSerial, deviceName });
 
     if (resp && resp.code !== '200') {
       setToast({
