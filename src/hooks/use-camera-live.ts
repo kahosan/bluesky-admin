@@ -10,8 +10,8 @@ export const useCameraLive = (key: string) => {
     fetcherWithAuthorization,
     {
       onError(error) {
+        const err = error.info as { message: string };
         if (error.status === 401) {
-          const err = error.info as { message: string };
           setToast({
             text: err.message,
             type: 'error',
@@ -19,7 +19,7 @@ export const useCameraLive = (key: string) => {
           });
         } else {
           setToast({
-            text: `${error.message}: ${error.status} ${error.info}`,
+            text: `服务器请求错误 ${err.message}`,
             type: 'error',
             delay: 5000
           });
