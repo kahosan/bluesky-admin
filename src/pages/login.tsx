@@ -1,5 +1,4 @@
 import { Button, Input, Note, Spacer, Tabs, Text } from '@geist-ui/core';
-import Tool from '@geist-ui/icons/tool';
 
 import { Helmet } from 'react-helmet-async';
 import { useCallback, useMemo, useState } from 'react';
@@ -110,6 +109,7 @@ const CompanyForm = () => {
         placeholder="请输入密码"
         onChange={e => setPassword(e.target.value)}
         type="default"
+        onKeyDown={e => e.key === 'Enter' && handleClick()}
       />
       <Spacer />
       <Button
@@ -153,12 +153,7 @@ export const LoginPage = () => {
           </Text>
           <Tabs initialValue="1" hideDivider>
             <Tabs.Item
-              label={
-                <>
-                  <Tool size="15" />
-                  Company
-                </>
-              }
+              label="Login"
               value="1"
             >
               <LoginForm />
