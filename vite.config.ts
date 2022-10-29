@@ -20,7 +20,6 @@ export default defineConfig({
   },
   test: {},
   plugins: [react(), unocss()],
-  base: './',
   resolve: {
     alias: {
       '@': '/src'
