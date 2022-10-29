@@ -1,6 +1,6 @@
 import { Button, Loading, Modal, useModal, useTheme } from '@geist-ui/core';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -18,11 +18,16 @@ import { useTrigger } from '@/hooks/use-trigger';
 import type { HTTPError } from '@/lib/fetcher';
 import type { DefaultResp } from '@/types/ezviz';
 
-const ControlMenu = (props: { deviceSerial: string }) => {
+const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
   const { setToast } = useToasts();
 
   const { setVisible, bindings } = useModal();
   const [encrypt, setEncrypt] = useState(false);
+
+  const [recording, setRecording] = useState(false);
+  const [blobUrl, setBlobUrl] = useState('');
+  const recordChunks = useRef<Uint8Array[]>([]);
+  const controllerFetch = useRef(new AbortController());
 
   const { trigger: onEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/on?');
   const { trigger: offEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/off?');
@@ -65,6 +70,58 @@ const ControlMenu = (props: { deviceSerial: string }) => {
     }
   };
 
+  const handleRecord = async () => {
+    if (recording) {
+      setRecording(false);
+      controllerFetch.current.abort();
+      controllerFetch.current = new AbortController();
+
+      const url = URL.createObjectURL(new Blob(recordChunks.current, { type: 'video/x-flv' }));
+      setBlobUrl(url);
+
+      setToast({
+        text: '录制完成，请点击下载按钮',
+        type: 'success',
+        delay: 3000
+      });
+      return;
+    }
+
+    try {
+      setRecording(true);
+      setToast({
+        text: '开始录制',
+        type: 'success',
+        delay: 3000
+      });
+
+      const stream = await fetch(props.videoSrc, { signal: controllerFetch.current.signal });
+
+      if (stream.body) {
+        const reader = stream.body.getReader();
+
+        (async function wrapperChunks() {
+          // 终止 fetch 会有报错，catch 一下
+          try {
+            const { value } = await reader.read();
+            if (value) {
+              recordChunks.current.push(value);
+            }
+
+            wrapperChunks();
+          } catch {}
+        })();
+      }
+    } catch (e) {
+      setRecording(false);
+      setToast({
+        type: 'error',
+        text: `录制失败 ${e}`,
+        delay: 3000
+      });
+    }
+  };
+
   const modalType = (type: 'encrypt' | 'decrypt') => {
     setEncrypt(type === 'encrypt');
     setVisible(true);
@@ -72,9 +129,12 @@ const ControlMenu = (props: { deviceSerial: string }) => {
 
   return (
     <>
-      <Button type="secondary-light" auto onClick={() => { modalType('decrypt'); }}>解密视频</Button>
-      <Button type="secondary-light" auto onClick={() => { modalType('encrypt'); }}>加密视频</Button>
-      <Button type="secondary-light" auto>开始录像</Button>
+      <Button type="secondary-light" auto onClick={() => modalType('decrypt')}>解密视频</Button>
+      <Button type="secondary-light" auto onClick={() => modalType('encrypt')}>加密视频</Button>
+      <Button type="secondary-light" auto onClick={() => handleRecord()}>{recording ? '停止录像' : '开始录像'}</Button>
+      <Button type="secondary-light" auto onClick={() => setTimeout(() => { URL.revokeObjectURL(blobUrl); }, 2000)}>
+        <a href={blobUrl} download={`${props.deviceSerial}.flv`} className="color-inherit">下载录像</a>
+      </Button>
       <Button type="secondary-light" auto>查看回放</Button>
       <Modal {...bindings}>
         <Modal.Title>提示</Modal.Title>
@@ -149,7 +209,7 @@ export const CameraPlayer = () => {
             }}
             className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
           >
-            <ControlMenu deviceSerial={deviceSerial || ''} />
+            <ControlMenu deviceSerial={deviceSerial || ''} videoSrc={data?.data?.url || ''} />
           </div>
         </div>
       </Layout>
