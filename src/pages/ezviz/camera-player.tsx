@@ -1,6 +1,6 @@
 import { Button, Loading, Modal, useModal, useTheme } from '@geist-ui/core';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -69,6 +69,8 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
       });
     }
   };
+
+  useEffect(() => () => URL.revokeObjectURL(blobUrl), [blobUrl]);
 
   const handleRecord = async () => {
     if (recording) {
