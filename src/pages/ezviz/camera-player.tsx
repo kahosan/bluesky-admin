@@ -26,8 +26,8 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
 
   const [recording, setRecording] = useState(false);
   const [blobUrl, setBlobUrl] = useState('');
-  const recordChunks = useRef<Uint8Array[]>([]);
-  const controllerFetch = useRef(new AbortController());
+  const recordChunksRef = useRef<Uint8Array[]>([]);
+  const controllerFetchRef = useRef(new AbortController());
 
   const { trigger: onEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/on?');
   const { trigger: offEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/off?');
@@ -73,10 +73,10 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
   const handleRecord = async () => {
     if (recording) {
       setRecording(false);
-      controllerFetch.current.abort();
-      controllerFetch.current = new AbortController();
+      controllerFetchRef.current.abort();
+      controllerFetchRef.current = new AbortController();
 
-      const url = URL.createObjectURL(new Blob(recordChunks.current, { type: 'video/x-flv' }));
+      const url = URL.createObjectURL(new Blob(recordChunksRef.current, { type: 'video/x-flv' }));
       setBlobUrl(url);
 
       setToast({
@@ -95,7 +95,7 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
         delay: 3000
       });
 
-      const stream = await fetch(props.videoSrc, { signal: controllerFetch.current.signal });
+      const stream = await fetch(props.videoSrc, { signal: controllerFetchRef.current.signal });
 
       if (stream.body) {
         const reader = stream.body.getReader();
@@ -105,7 +105,7 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
           try {
             const { value } = await reader.read();
             if (value) {
-              recordChunks.current.push(value);
+              recordChunksRef.current.push(value);
             }
 
             wrapperChunks();
