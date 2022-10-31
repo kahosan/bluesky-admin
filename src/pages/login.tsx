@@ -4,8 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { HTTPError } from '@/lib/fetcher';
-
 import type { UserResponse } from '@/types/user';
 
 import { useToasts } from '@/hooks/use-toasts';
@@ -14,7 +12,7 @@ import { useToken } from '@/hooks/use-token';
 import { Container } from '@/components/container';
 
 const CompanyForm = () => {
-  const [, setIsCompany] = useToken();
+  const [, setToken] = useToken();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -34,61 +32,52 @@ const CompanyForm = () => {
 
   const login = useCallback(
     async ({ username, password }: { username: string; password: string }) => {
-      const handleLoginError = () => {
+      const handleLoginError = (errMessage?: string) => {
         setIslodding(false);
 
         setToast({
           type: 'error',
-          text: '登入错误 请检查输入的用户名和密码',
+          text: errMessage || '登入错误 请检查输入的用户名和密码',
           delay: 5000
         });
       };
 
-      async function fetcher<UserResponse>(username: string, password: string): Promise<UserResponse> {
-        const res = await fetch('/user/login', {
+      let errMessage = '';
+      try {
+        const resp = await fetch('/user/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({ username, password }),
-          credentials: 'include'
+          credentials: 'same-origin'
         });
-        const data = await res.json();
+        const data = await resp.json() as UserResponse;
 
-        if (!res.ok) {
-          throw new HTTPError(
-            data.message || 'An error occurred while fetching the data',
-            data,
-            res.status
-          );
+        if (!resp.ok) {
+          errMessage = data.message;
+          return;
         }
 
-        return data;
-      }
+        setIslodding(true);
+        if (data.message) {
+          setToken('yes');
 
-      setIslodding(true);
-      setTimeout(async () => {
-        try {
-          const resp: UserResponse = await fetcher(username, password);
-          if (resp.msg) {
-            setIsCompany('yes');
+          setToast({
+            type: 'success',
+            text: '登入成功',
+            delay: 2000
+          });
 
-            setToast({
-              type: 'success',
-              text: '登入成功',
-              delay: 2000
-            });
-
-            navigate('/');
-          } else {
-            handleLoginError();
-          }
-        } catch (e) {
+          navigate('/');
+        } else {
           handleLoginError();
         }
-      }, 2000);
+      } catch (e) {
+        handleLoginError(errMessage);
+      }
     },
-    [navigate, setIsCompany, setToast]
+    [navigate, setToken, setToast]
   );
 
   const handleClick = useCallback(() => {
