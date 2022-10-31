@@ -58,34 +58,41 @@ export const EzvizPage = () => {
 
   const { data, error, mutate } = useEzvizList<EzvizDeviceListResp>(`/api/camera/ezviz/list?pageStart=${page}`);
 
+  /**
+   * nvrProps 填充多个子表格数据，防止互相影响
+   * isCreateChildTableRef 用于判断是否创建了子表格
+   * tdRef 为 createPortal 的容器
+   */
   const [nvrProps, setNVRProps] = useState<{ deviceSerial: string; status: JSX.Element; addTime: string }[]>([]);
-  const isCreateChildTable = useRef<Record<string, boolean>>({});
+  const isCreateChildTableRef = useRef<Record<string, boolean>>({});
   const tdRef = useRef<Record<string, HTMLDivElement>>({});
 
   // 为了给嵌套的表格加动画
   const channelView = useCallback((deviceSerial: string, status: JSX.Element, addTime: string) => {
-    isCreateChildTable.current[deviceSerial] = isCreateChildTable.current[deviceSerial] ?? false;
-    tdRef.current[deviceSerial] = tdRef.current[deviceSerial] ?? document.createElement('td');
+    // xxxx =  xxxx ?? xx
+    isCreateChildTableRef.current[deviceSerial] ??= false;
+    tdRef.current[deviceSerial] ??= document.createElement('td');
 
     const handleClick = () => {
-      setNVRProps([
-        ...nvrProps.filter(item => item.deviceSerial !== deviceSerial),
-        { deviceSerial, status, addTime }
-      ]);
-
-      if (isCreateChildTable.current[deviceSerial]) {
+      if (isCreateChildTableRef.current[deviceSerial]) {
         const targetElement = document.querySelector(`#nvr-${deviceSerial}`);
+        const childTrElement = document.querySelector(`#child-tr-${deviceSerial}`);
 
-        if (targetElement) {
+        if (targetElement && childTrElement) {
           targetElement.className = 'max-h-0 transition-max-height-500';
           setTimeout(() => {
-            document.querySelector(`#child-tr-${deviceSerial}`)!.remove();
-            isCreateChildTable.current[deviceSerial] = false;
+            childTrElement.remove();
+            isCreateChildTableRef.current[deviceSerial] = false;
           }, 500);
         }
 
         return;
       }
+
+      setNVRProps([
+        ...nvrProps.filter(item => item.deviceSerial !== deviceSerial),
+        { deviceSerial, status, addTime }
+      ]);
 
       const targetElement = document.querySelector(`.${deviceSerial}`);
       const nvrTables = document.createElement('tr');
@@ -100,7 +107,7 @@ export const EzvizPage = () => {
         parentNode.insertBefore(nvrTables, targetElement.nextSibling);
       }
 
-      if (!isCreateChildTable.current[deviceSerial]) { isCreateChildTable.current[deviceSerial] = true; }
+      if (!isCreateChildTableRef.current[deviceSerial]) { isCreateChildTableRef.current[deviceSerial] = true; }
 
       setTimeout(() => {
         const nvrTableEle = document.querySelector(`#nvr-${deviceSerial}`);
@@ -112,7 +119,7 @@ export const EzvizPage = () => {
     };
 
     return <Button scale={0.6} auto onClick={handleClick}>查看通道</Button>;
-  }, [isCreateChildTable, tdRef, setNVRProps, nvrProps]);
+  }, [isCreateChildTableRef, tdRef, setNVRProps, nvrProps]);
 
   const serializationData = useCallback((
     ezvizList: EzvizTableData[],
