@@ -4,8 +4,6 @@ import { useCallback, useState } from 'react';
 
 import { useToasts } from '@/hooks/use-toasts';
 
-import type { HTTPError } from '@/lib/fetcher';
-
 import DataTable from '@/components/data-tables';
 import type { TableColumns } from '@/components/data-tables/types';
 import type { EzvizTableData } from '@/types/ezviz';
@@ -38,7 +36,7 @@ export const EzvizTable = ({
 
   const onModalClose = () => setShowModal(false);
 
-  const { trigger } = useTrigger<{ code: string; msg: string }, HTTPError>('/api/camera/ezviz/rename?');
+  const { trigger } = useTrigger<{ code: string; msg: string }>('/api/camera/ezviz/rename?');
 
   const handleReName = useCallback(async (deviceSerial: string, deviceName: string) => {
     const resp = await trigger({ deviceSerial, deviceName });

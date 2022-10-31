@@ -15,7 +15,6 @@ import { useCameraLive } from '@/hooks/use-camera-live';
 import { useToasts } from '@/hooks/use-toasts';
 import { useTrigger } from '@/hooks/use-trigger';
 
-import type { HTTPError } from '@/lib/fetcher';
 import type { DefaultResp } from '@/types/ezviz';
 
 const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
@@ -29,8 +28,8 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
   const recordChunksRef = useRef<Uint8Array[]>([]);
   const controllerFetchRef = useRef(new AbortController());
 
-  const { trigger: onEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/on?');
-  const { trigger: offEncryptTrigger } = useTrigger<DefaultResp, HTTPError>('/api/camera/ezviz/encrypt/off?');
+  const { trigger: onEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/on?');
+  const { trigger: offEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/off?');
 
   const onEncryptHandler = async () => {
     setVisible(false);

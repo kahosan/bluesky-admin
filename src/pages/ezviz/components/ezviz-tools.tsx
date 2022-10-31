@@ -3,8 +3,6 @@ import { Search } from '@geist-ui/icons';
 
 import { useState } from 'react';
 
-import type { HTTPError } from '@/lib/fetcher';
-
 import type { EzvizCameraSearchResp, EzvizDeviceListResp } from '@/types/ezviz';
 import { useTrigger } from '@/hooks/use-trigger';
 import { useToasts } from '@/hooks/use-toasts';
@@ -17,7 +15,7 @@ export const EzvizTools = ({ update }: EzvizToolsProps) => {
   const { setToast } = useToasts();
   const [keyword, setKeyword] = useState('');
 
-  const { trigger } = useTrigger<EzvizCameraSearchResp, HTTPError>('/api/camera/ezviz/search?');
+  const { trigger } = useTrigger<EzvizCameraSearchResp>('/api/camera/ezviz/search?');
 
   const handleSearch = async () => {
     const data = await trigger({ key: keyword });
