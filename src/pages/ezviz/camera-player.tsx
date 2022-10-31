@@ -185,7 +185,7 @@ export const CameraPlayer = () => {
           }}
           className="flex flex-col md:flex-row"
         >
-          <div className="w-100% relative">
+          <div className="w-100% md:min-h-100 relative">
             {
               error || (data ? data.code !== '200' : undefined)
                 ? <NotFoundError title="加载错误" height="h-70" />
