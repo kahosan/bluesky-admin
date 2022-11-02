@@ -1,6 +1,6 @@
-import { Button, Loading, Modal, useModal, useTheme } from '@geist-ui/core';
+import { Button, Loading, Modal, Tooltip, useModal, useTheme } from '@geist-ui/core';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -17,7 +17,10 @@ import { useTrigger } from '@/hooks/use-trigger';
 
 import type { DefaultResp } from '@/types/ezviz';
 
-const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
+// 不是所有浏览器都支持 captureStream
+type IHTMLVideoElement = HTMLVideoElement & { captureStream(): MediaStream };
+
+const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | null }) => {
   const { setToast } = useToasts();
 
   const { setVisible, bindings } = useModal();
@@ -25,8 +28,8 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
 
   const [recording, setRecording] = useState(false);
   const [blobUrl, setBlobUrl] = useState('');
-  const recordChunksRef = useRef<Uint8Array[]>([]);
-  const controllerFetchRef = useRef(new AbortController());
+  const recordChunksRef = useRef<Blob[]>([]);
+  const recorderRef = useRef<MediaRecorder>();
 
   const { trigger: onEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/on?');
   const { trigger: offEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/off?');
@@ -69,16 +72,55 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
     }
   };
 
-  useEffect(() => () => URL.revokeObjectURL(blobUrl), [blobUrl]);
+  useEffect(() => {
+    if (props.reactPlayer && !recorderRef.current) {
+      const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
+      const stream = videoInstance.captureStream();
+      recorderRef.current = new MediaRecorder(stream);
+    }
 
-  const handleRecord = async () => {
+    if (recorderRef.current) {
+      recorderRef.current.onstop = () => {
+        const blob = new Blob(recordChunksRef.current);
+        const url = URL.createObjectURL(blob);
+        setBlobUrl(url);
+
+        recordChunksRef.current = [];
+        recorderRef.current = undefined;
+      };
+
+      recorderRef.current.onerror = () => {
+        setToast({
+          text: '录像不可用，请联系管理员',
+          type: 'error',
+          delay: 4000
+        });
+
+        recordChunksRef.current = [];
+        recorderRef.current = undefined;
+      };
+    }
+  }, [blobUrl, props.reactPlayer, recorderRef, setToast]);
+
+  const handleRecord = useCallback(() => {
+    if (!props.reactPlayer || !recorderRef.current) {
+      setToast({
+        type: 'error',
+        text: '录像不可用，请联系管理员',
+        delay: 4000
+      });
+
+      return;
+    }
+
+    const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
+
     if (recording) {
       setRecording(false);
-      controllerFetchRef.current.abort();
-      controllerFetchRef.current = new AbortController();
 
-      const url = URL.createObjectURL(new Blob(recordChunksRef.current, { type: 'video/x-flv' }));
-      setBlobUrl(url);
+      videoInstance.captureStream().getTracks().forEach(track => track.stop());
+      recorderRef.current.stop();
+      videoInstance.pause();
 
       setToast({
         text: '录制完成，请点击下载按钮',
@@ -89,6 +131,15 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
     }
 
     try {
+      if (!videoInstance.paused) {
+        setToast({
+          type: 'error',
+          text: '请先暂停视频',
+          delay: 3000
+        });
+        return;
+      }
+
       setRecording(true);
       setToast({
         text: '开始录制',
@@ -96,45 +147,36 @@ const ControlMenu = (props: { deviceSerial: string; videoSrc: string }) => {
         delay: 3000
       });
 
-      const stream = await fetch(props.videoSrc, { signal: controllerFetchRef.current.signal });
+      recorderRef.current.ondataavailable = (e) => {
+        recordChunksRef.current.push(e.data);
+      };
 
-      if (stream.body) {
-        const reader = stream.body.getReader();
-
-        (async function wrapperChunks() {
-          // 终止 fetch 会有报错，catch 一下
-          try {
-            const { value } = await reader.read();
-            if (value) {
-              recordChunksRef.current.push(value);
-            }
-
-            wrapperChunks();
-          } catch {}
-        })();
-      }
+      videoInstance.play();
+      recorderRef.current.start();
     } catch (e) {
       setRecording(false);
       setToast({
         type: 'error',
-        text: `录制失败 ${e}`,
+        text: '录制失败 请联系管理员',
         delay: 3000
       });
     }
-  };
+  }, [props.reactPlayer, recording, setToast]);
 
   const modalType = (type: 'encrypt' | 'decrypt') => {
     setEncrypt(type === 'encrypt');
     setVisible(true);
   };
 
+  const tipText = '录像前，请先停止播放再点击开始录像';
+
   return (
     <>
       <Button type="secondary-light" auto onClick={() => modalType('decrypt')}>解密视频</Button>
       <Button type="secondary-light" auto onClick={() => modalType('encrypt')}>加密视频</Button>
-      <Button type="secondary-light" auto onClick={() => handleRecord()}>{recording ? '停止录像' : '开始录像'}</Button>
+      <Button type="secondary-light" auto onClick={() => handleRecord()}><Tooltip text={tipText}>{recording ? '停止录像' : '开始录像'}</Tooltip></Button>
       <Button type="secondary-light" auto onClick={() => setTimeout(() => { URL.revokeObjectURL(blobUrl); }, 2000)}>
-        <a href={blobUrl} download={`${props.deviceSerial}.flv`} className="color-inherit">下载录像</a>
+        <a href={blobUrl} download={`${props.deviceSerial}.mp4`} className="color-inherit">下载录像</a>
       </Button>
       <Button type="secondary-light" auto>查看回放</Button>
       <Modal {...bindings}>
@@ -158,8 +200,10 @@ export const CameraPlayer = () => {
   const channelNo = searchParams.get('channelNo');
 
   const { data, error } = useCameraLive(
-    `/api/camera/ezviz/live?deviceSerial=${deviceSerial}&protocol=${4}&quality=${1}&channelNo=${channelNo || '1'}`
+    `/api/camera/ezviz/live?deviceSerial=${deviceSerial}&protocol=${2}&quality=${1}&channelNo=${channelNo || '1'}`
   );
+
+  const reactPlayerRef = useRef<ReactPlayer>(null);
 
   return (
     <>
@@ -192,6 +236,7 @@ export const CameraPlayer = () => {
                 : data
                   ? (
                     <ReactPlayer
+                      ref={reactPlayerRef}
                       url={data.data.url}
                       controls
                       playing
@@ -210,7 +255,7 @@ export const CameraPlayer = () => {
             }}
             className="md:ml-6 flex flex-wrap justify-around md:flex-col lt-md:mt-2 lt-md:!children:m-1 px-5 py-2"
           >
-            <ControlMenu deviceSerial={deviceSerial || ''} videoSrc={data?.data?.url || ''} />
+            <ControlMenu deviceSerial={deviceSerial || ''} reactPlayer={reactPlayerRef.current} />
           </div>
         </div>
       </Layout>
