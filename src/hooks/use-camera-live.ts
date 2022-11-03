@@ -1,4 +1,4 @@
-import useSWRImmutable from 'swr/immutable';
+import { useEffect, useState } from 'react';
 
 import { useStatusCodeHandler } from './use-status-code-handler';
 
@@ -8,17 +8,21 @@ import type { EzvizLiveResp } from '@/types/ezviz';
 
 export const useCameraLive = (key: string) => {
   const { handleError, handleSuccess } = useStatusCodeHandler();
+  const [data, setData] = useState<EzvizLiveResp>();
 
-  return useSWRImmutable<EzvizLiveResp>(
-    key,
-    fetcherWithAuthorization,
-    {
-      onError(error) {
-        handleError(error);
-      },
-      onSuccess(data) {
-        handleSuccess(data);
-      }
-    }
-  );
+  const fetchLive = () => {
+    fetcherWithAuthorization<EzvizLiveResp>(key)
+      .then((res) => {
+        handleSuccess(res);
+        setData(res);
+      }).catch((err) => {
+        handleError(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchLive();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return { error: !data, data };
 };

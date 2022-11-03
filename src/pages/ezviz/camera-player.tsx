@@ -73,7 +73,7 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
   };
 
   useEffect(() => {
-    if (props.reactPlayer && !recorderRef.current) {
+    if (props.reactPlayer && !recorderRef.current && props.reactPlayer.getInternalPlayer()) {
       const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
       const stream = videoInstance.captureStream();
       recorderRef.current = new MediaRecorder(stream);
@@ -161,7 +161,7 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
         delay: 3000
       });
     }
-  }, [props.reactPlayer, recording, setToast]);
+  }, [props.reactPlayer, recording, setToast, recorderRef]);
 
   const modalType = (type: 'encrypt' | 'decrypt') => {
     setEncrypt(type === 'encrypt');
