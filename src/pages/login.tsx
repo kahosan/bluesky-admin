@@ -119,8 +119,8 @@ const LoginForm = () => {
     <div>
       <CompanyForm />
       <Spacer />
-      <Note type="warning" w="100%">
-        <Text p>您的 API 令牌只会存储在本地浏览器中</Text>
+      <Note type="default" w="100%">
+        <Text p>可在线查看萤石云摄像头画面以及查看/修改物联网关监控点</Text>
       </Note>
     </div>
   );
