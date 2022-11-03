@@ -142,7 +142,7 @@ export const LoginPage = () => {
           </Text>
           <Tabs initialValue="1" hideDivider>
             <Tabs.Item
-              label="Login"
+              label="用户名登入"
               value="1"
             >
               <LoginForm />
