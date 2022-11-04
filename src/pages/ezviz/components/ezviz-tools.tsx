@@ -1,44 +1,26 @@
-import { Button, Input } from '@geist-ui/core';
+import { Button, Input, Modal, useModal } from '@geist-ui/core';
 import { Search } from '@geist-ui/icons';
 
 import { useState } from 'react';
 
-import type { EzvizCameraSearchResp, EzvizDeviceListResp } from '@/types/ezviz';
-import { useTrigger } from '@/hooks/use-trigger';
-import { useToasts } from '@/hooks/use-toasts';
+import { useToolActions } from '../hooks/use-tool-actions';
+
+import { Menu, MenuItem } from '@/components/menu';
+
+import type { EzvizDeviceListResp } from '@/types/ezviz';
 
 interface EzvizToolsProps {
   update: (newData: EzvizDeviceListResp) => void
 }
 
 export const EzvizTools = ({ update }: EzvizToolsProps) => {
-  const { setToast } = useToasts();
   const [keyword, setKeyword] = useState('');
+  const { bindings, setVisible } = useModal();
 
-  const { trigger } = useTrigger<EzvizCameraSearchResp>('/api/camera/ezviz/search?');
+  const [deviceSerial, setDeviceSerial] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
 
-  const handleSearch = async () => {
-    const data = await trigger({ key: keyword });
-
-    if (data) {
-      if (data.code !== '200') {
-        setToast({
-          text: data.msg,
-          type: 'error',
-          delay: 5000
-        });
-      }
-
-      update({
-        ...data,
-        page: {
-          total: 1,
-          size: 1,
-          page: 1
-        }
-      });
-    }
-  };
+  const { handleSearch, handleRefresh, handleAddDevice } = useToolActions(keyword, update);
 
   return (
     <div className="my-2 mb-4 flex items-center justify-between">
@@ -55,7 +37,40 @@ export const EzvizTools = ({ update }: EzvizToolsProps) => {
         onChange={e => setKeyword(e.target.value)}
         className="mr-3"
       />
-      <Button h={0.88}>添加设备</Button>
+      <div className="flex justify-center lt-md:hidden">
+        <Button auto onClick={() => handleRefresh()}>刷新设备</Button>
+        <span className="mx-2" />
+        <Button auto onClick={() => setVisible(true)}>添加设备</Button>
+      </div>
+      <div className="md:hidden">
+        <Menu
+          itemWidth={100}
+          content={
+            <>
+              <MenuItem>
+                <Button auto onClick={() => handleRefresh()}>刷新设备</Button>
+              </MenuItem>
+              <MenuItem>
+                <Button auto onClick={() => setVisible(true)}>添加设备</Button>
+              </MenuItem>
+            </>
+          }
+        >
+          <Button auto>操作</Button>
+        </Menu>
+      </div>
+      <Modal {...bindings}>
+        <Modal.Title>添加设备</Modal.Title>
+        <Modal.Content>
+          <div className="mx-auto w-85%">
+            <Input w="100%" label="设备序列号" placeholder="请输入设备序列号" onChange={e => setDeviceSerial(e.target.value)} />
+            <div className="h-7" />
+            <Input w="100%" label="设备验证码" placeholder="请输入设备验证码" onChange={e => setVerificationCode(e.target.value)} />
+          </div>
+        </Modal.Content>
+        <Modal.Action onClick={() => handleAddDevice(deviceSerial, verificationCode)}>确定</Modal.Action>
+        <Modal.Action passive onClick={() => setVisible(false)}>取消</Modal.Action>
+      </Modal>
     </div>
   );
 };
