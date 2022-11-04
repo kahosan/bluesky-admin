@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useStatusCodeHandler } from './use-status-code-handler';
+import { useStatusCodeHandler } from '../../../hooks/use-status-code-handler';
 
 import { fetcherWithAuthorization } from '@/lib/fetcher';
 

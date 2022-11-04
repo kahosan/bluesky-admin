@@ -12,7 +12,7 @@ import { EzvizTools } from './components/ezviz-tools';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 import { Layout } from '@/components/layout';
 
-import { useEzvizList } from '@/hooks/use-ezviz-list';
+import { useEzvizList } from '@/pages/ezviz/hooks/use-ezviz-list';
 
 import { NotFoundError } from '@/pages/404';
 import { NVRTables } from '@/pages/ezviz/components/nvr-table';

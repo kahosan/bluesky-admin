@@ -11,7 +11,7 @@ import { NotFoundError } from '../404';
 import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
-import { useCameraLive } from '@/hooks/use-camera-live';
+import { useCameraLive } from '@/pages/ezviz/hooks/use-camera-live';
 import { useToasts } from '@/hooks/use-toasts';
 import { useTrigger } from '@/hooks/use-trigger';
 

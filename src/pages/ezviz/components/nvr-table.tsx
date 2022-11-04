@@ -4,7 +4,7 @@ import { Edit } from '@geist-ui/icons';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-import { useEzvizList } from '@/hooks/use-ezviz-list';
+import { useEzvizList } from '@/pages/ezviz/hooks/use-ezviz-list';
 
 import { EzvizTable } from '@/pages/ezviz/components/ezviz-table';
 

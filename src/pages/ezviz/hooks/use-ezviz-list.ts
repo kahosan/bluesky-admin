@@ -1,6 +1,6 @@
 import useSWRImmutable from 'swr/immutable';
 
-import { useStatusCodeHandler } from './use-status-code-handler';
+import { useStatusCodeHandler } from '../../../hooks/use-status-code-handler';
 import { fetcherWithAuthorization } from '@/lib/fetcher';
 
 import type { HTTPError } from '@/lib/fetcher';
