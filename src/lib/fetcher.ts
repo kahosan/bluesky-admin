@@ -32,13 +32,13 @@ export const fetcherWithAuthorization = async <T>(key: string, options?: Respons
   return data;
 };
 
-export const fetcherWithSWRMutation = async <T>(key: string, { arg }: { arg: Record<string, string> }): Promise<T> => {
+export const fetcherWithSWRMutation = async <T>(key: string, { arg }: { arg?: Record<string, string> }): Promise<T> => {
   const headers = new Headers({
     'Content-Type': 'application/json'
   });
 
   const res = await fetch(
-    key + new URLSearchParams(arg),
+    key + (arg ? new URLSearchParams(arg) : ''),
     { method: 'POST', headers, credentials: 'same-origin' }
   );
   const data = await res.json();
