@@ -27,7 +27,6 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
   const [encrypt, setEncrypt] = useState(false);
 
   const [recording, setRecording] = useState(false);
-  const [blobUrl, setBlobUrl] = useState('');
   const recordChunksRef = useRef<Blob[]>([]);
   const recorderRef = useRef<MediaRecorder>();
 
@@ -72,6 +71,15 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
     }
   };
 
+  const download = (name: string, url: string) => {
+    const a = document.createElement('a');
+    a.setAttribute('href', url);
+    a.setAttribute('download', name);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   useEffect(() => {
     if (props.reactPlayer && !recorderRef.current && props.reactPlayer.getInternalPlayer()) {
       const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
@@ -83,8 +91,9 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
       recorderRef.current.onstop = () => {
         const blob = new Blob(recordChunksRef.current);
         const url = URL.createObjectURL(blob);
-        setBlobUrl(url);
+        download(`${props.deviceSerial}.mp4`, url);
 
+        URL.revokeObjectURL(url);
         recordChunksRef.current = [];
         recorderRef.current = undefined;
       };
@@ -100,7 +109,7 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
         recorderRef.current = undefined;
       };
     }
-  }, [blobUrl, props.reactPlayer, recorderRef, setToast]);
+  }, [props.deviceSerial, props.reactPlayer, recorderRef, setToast]);
 
   const handleRecord = useCallback(() => {
     if (!props.reactPlayer || !recorderRef.current) {
@@ -175,9 +184,6 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
       <Button type="secondary-light" auto onClick={() => modalType('decrypt')}>解密视频</Button>
       <Button type="secondary-light" auto onClick={() => modalType('encrypt')}>加密视频</Button>
       <Button type="secondary-light" auto onClick={() => handleRecord()}><Tooltip text={tipText}>{recording ? '停止录像' : '开始录像'}</Tooltip></Button>
-      <Button type="secondary-light" auto onClick={() => setTimeout(() => { URL.revokeObjectURL(blobUrl); }, 2000)}>
-        <a href={blobUrl} download={`${props.deviceSerial}.mp4`} className="color-inherit">下载录像</a>
-      </Button>
       <Button type="secondary-light" auto>查看回放</Button>
       <Modal {...bindings}>
         <Modal.Title>提示</Modal.Title>
