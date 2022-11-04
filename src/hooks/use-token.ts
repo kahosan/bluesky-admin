@@ -7,12 +7,12 @@ const baseKeyAtom = atom(isBrowser ? localStorage.getItem(JWT_TOKEN) : null);
 
 const tokenAtom = atom(
   get => get(baseKeyAtom),
-  (get, set, isCompany: string | null) => {
-    set(baseKeyAtom, isCompany);
+  (get, set, token: string | null) => {
+    set(baseKeyAtom, token);
     if (isBrowser) {
       Promise.resolve().then(() => {
-        if (isCompany) {
-          localStorage.setItem(JWT_TOKEN, isCompany);
+        if (token) {
+          localStorage.setItem(JWT_TOKEN, token);
         } else {
           localStorage.removeItem(JWT_TOKEN);
         }
