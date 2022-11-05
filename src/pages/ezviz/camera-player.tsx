@@ -111,7 +111,7 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
     }
   }, [props.deviceSerial, props.reactPlayer, recorderRef, setToast]);
 
-  const handleRecord = useCallback(() => {
+  const handleRecord = useCallback(async () => {
     if (!props.reactPlayer || !recorderRef.current) {
       setToast({
         type: 'error',
@@ -160,7 +160,7 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
         recordChunksRef.current.push(e.data);
       };
 
-      videoInstance.play();
+      await videoInstance.play();
       recorderRef.current.start();
     } catch (e) {
       setRecording(false);
