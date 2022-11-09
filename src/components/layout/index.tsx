@@ -134,9 +134,11 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
           </div>
         </nav>
       </div>
-      <Container maxWidth={theme.layout.pageWidthWithMargin} className="mt-64px min-h-[calc(100vh-64px)]">
-        {props.children}
-      </Container>
+      <div style={{ marginRight: 'calc(100% - 100vw)' }}>
+        <Container maxWidth={theme.layout.pageWidthWithMargin} className="mt-64px min-h-[calc(100vh-64px)]">
+          {props.children}
+        </Container>
+      </div>
     </>
   );
 };
