@@ -1,4 +1,4 @@
-import { Button, Loading, Modal, Tooltip, useTheme } from '@geist-ui/core';
+import { Button, Loading, Modal, Note, Text, Tooltip, useTheme } from '@geist-ui/core';
 
 import { useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -114,6 +114,7 @@ export const CameraPlayer = () => {
             <ControlMenu deviceSerial={deviceSerial || ''} reactPlayer={reactPlayerRef.current} />
           </div>
         </div>
+        <Note className="mt-5!" type="default"><Text type="default">如果播放器一直在转圈，尝试一下刷新页面。还不行就联系管理员。</Text></Note>
       </Layout>
     </>
   );
