@@ -1,6 +1,6 @@
 import { Button, Loading, Modal, Tooltip, useModal, useTheme } from '@geist-ui/core';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import ReactPlayer from 'react-player';
@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player';
 import { Helmet } from 'react-helmet-async';
 import { NotFoundError } from '../404';
 
+import { useRecorder } from './hooks/use-recorder';
 import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
@@ -17,18 +18,13 @@ import { useTrigger } from '@/hooks/use-trigger';
 
 import type { DefaultResp } from '@/types/ezviz';
 
-// 不是所有浏览器都支持 captureStream
-type IHTMLVideoElement = HTMLVideoElement & { captureStream(): MediaStream };
-
 const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | null }) => {
   const { setToast } = useToasts();
 
   const { setVisible, bindings } = useModal();
   const [encrypt, setEncrypt] = useState(false);
 
-  const [recording, setRecording] = useState(false);
-  const recordChunksRef = useRef<Blob[]>([]);
-  const recorderRef = useRef<MediaRecorder>();
+  const { recording, handleRecord } = useRecorder(props.reactPlayer, props.deviceSerial);
 
   const { trigger: onEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/on?');
   const { trigger: offEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/off?');
@@ -70,107 +66,6 @@ const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | n
       });
     }
   };
-
-  const download = (name: string, url: string) => {
-    const a = document.createElement('a');
-    a.setAttribute('href', url);
-    a.setAttribute('download', name);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-
-  useEffect(() => {
-    if (props.reactPlayer && !recorderRef.current && props.reactPlayer.getInternalPlayer()) {
-      const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
-      const stream = videoInstance.captureStream();
-      recorderRef.current = new MediaRecorder(stream);
-    }
-
-    if (recorderRef.current) {
-      recorderRef.current.onstop = () => {
-        const blob = new Blob(recordChunksRef.current);
-        const url = URL.createObjectURL(blob);
-        download(`${props.deviceSerial}.mp4`, url);
-
-        URL.revokeObjectURL(url);
-        recordChunksRef.current = [];
-        recorderRef.current = undefined;
-      };
-
-      recorderRef.current.onerror = () => {
-        setToast({
-          text: '录像不可用，请联系管理员',
-          type: 'error',
-          delay: 4000
-        });
-
-        recordChunksRef.current = [];
-        recorderRef.current = undefined;
-      };
-    }
-  }, [props.deviceSerial, props.reactPlayer, recorderRef, setToast]);
-
-  const handleRecord = useCallback(async () => {
-    if (!props.reactPlayer || !recorderRef.current) {
-      setToast({
-        type: 'error',
-        text: '录像不可用，请联系管理员',
-        delay: 4000
-      });
-
-      return;
-    }
-
-    const videoInstance = props.reactPlayer.getInternalPlayer() as IHTMLVideoElement;
-
-    if (recording) {
-      setRecording(false);
-
-      videoInstance.captureStream().getTracks().forEach(track => track.stop());
-      recorderRef.current.stop();
-      videoInstance.pause();
-
-      setToast({
-        text: '录制完成，请点击下载按钮',
-        type: 'success',
-        delay: 3000
-      });
-      return;
-    }
-
-    try {
-      if (!videoInstance.paused) {
-        setToast({
-          type: 'error',
-          text: '请先暂停视频',
-          delay: 3000
-        });
-        return;
-      }
-
-      setRecording(true);
-      setToast({
-        text: '开始录制',
-        type: 'success',
-        delay: 3000
-      });
-
-      recorderRef.current.ondataavailable = (e) => {
-        recordChunksRef.current.push(e.data);
-      };
-
-      await videoInstance.play();
-      recorderRef.current.start();
-    } catch (e) {
-      setRecording(false);
-      setToast({
-        type: 'error',
-        text: '录制失败 请联系管理员',
-        delay: 3000
-      });
-    }
-  }, [props.reactPlayer, recording, setToast, recorderRef]);
 
   const modalType = (type: 'encrypt' | 'decrypt') => {
     setEncrypt(type === 'encrypt');
