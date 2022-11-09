@@ -1,4 +1,4 @@
-import { Button, Loading, Modal, Tooltip, useModal, useTheme } from '@geist-ui/core';
+import { Button, Loading, Modal, Tooltip, useTheme } from '@geist-ui/core';
 
 import { useRef, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -9,63 +9,18 @@ import { Helmet } from 'react-helmet-async';
 import { NotFoundError } from '../404';
 
 import { useRecorder } from './hooks/use-recorder';
+import { useControlMenuAction } from './hooks/use-control-menu-action';
 import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
 import { useCameraLive } from '@/pages/ezviz/hooks/use-camera-live';
-import { useToasts } from '@/hooks/use-toasts';
-import { useTrigger } from '@/hooks/use-trigger';
-
-import type { DefaultResp } from '@/types/ezviz';
 
 const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | null }) => {
-  const { setToast } = useToasts();
-
-  const { setVisible, bindings } = useModal();
   const [encrypt, setEncrypt] = useState(false);
 
+  const { setVisible, bindings, onEncryptHandler, offEncryptHandler } = useControlMenuAction(props.deviceSerial);
+
   const { recording, handleRecord } = useRecorder(props.reactPlayer, props.deviceSerial);
-
-  const { trigger: onEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/on?');
-  const { trigger: offEncryptTrigger } = useTrigger<DefaultResp>('/api/camera/ezviz/encrypt/off?');
-
-  const onEncryptHandler = async () => {
-    setVisible(false);
-    const data = await onEncryptTrigger({ deviceSerial: props.deviceSerial });
-
-    if (data?.code === '200') {
-      setToast({
-        text: data?.msg || '加密成功',
-        type: 'success',
-        delay: 3000
-      });
-    } else {
-      setToast({
-        text: data?.msg || '加密失败',
-        type: 'error',
-        delay: 3000
-      });
-    }
-  };
-
-  const offEncryptHandler = async () => {
-    setVisible(false);
-    const data = await offEncryptTrigger({ deviceSerial: props.deviceSerial });
-
-    if (data?.code === '200') {
-      setToast({
-        text: `${data?.msg || '解密成功'} 请刷新网页`,
-        type: 'success',
-        delay: 3000
-      });
-    } else {
-      setToast({
-        text: data?.msg || '解密失败',
-        type: 'error',
-        delay: 3000
-      });
-    }
-  };
 
   const modalType = (type: 'encrypt' | 'decrypt') => {
     setEncrypt(type === 'encrypt');
