@@ -5,7 +5,7 @@ import { useToasts } from '@/hooks/use-toasts';
 
 import type { DefaultResp } from '@/types/ezviz';
 
-export const useControlMenuAction = (deviceSerial: string) => {
+export const useControlMenuActions = (deviceSerial: string) => {
   const { setToast } = useToasts();
   const { setVisible, bindings } = useModal();
 

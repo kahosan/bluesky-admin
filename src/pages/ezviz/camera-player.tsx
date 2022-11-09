@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet-async';
 import { NotFoundError } from '../404';
 
 import { useRecorder } from './hooks/use-recorder';
-import { useControlMenuAction } from './hooks/use-control-menu-action';
+import { useControlMenuActions } from './hooks/use-control-menu-actions';
 import { Layout } from '@/components/layout';
 import { Breadcrumbs } from '@/components/bread-crumbs';
 
@@ -18,7 +18,7 @@ import { useCameraLive } from '@/pages/ezviz/hooks/use-camera-live';
 const ControlMenu = (props: { deviceSerial: string; reactPlayer: ReactPlayer | null }) => {
   const [encrypt, setEncrypt] = useState(false);
 
-  const { setVisible, bindings, onEncryptHandler, offEncryptHandler } = useControlMenuAction(props.deviceSerial);
+  const { setVisible, bindings, onEncryptHandler, offEncryptHandler } = useControlMenuActions(props.deviceSerial);
 
   const { recording, handleRecord } = useRecorder(props.reactPlayer, props.deviceSerial);
 
