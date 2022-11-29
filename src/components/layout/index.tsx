@@ -26,7 +26,7 @@ export const AvatarMenu = (props: { name: string }) => {
       text: '你已经成功退出',
       delay: 3000
     });
-    navigate('/login');
+    navigate('/login', { replace: true });
   }, [setToken, navigate, setToast]);
 
   return (

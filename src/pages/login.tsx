@@ -56,12 +56,12 @@ const CompanyForm = () => {
 
         if (!resp.ok) {
           errMessage = data.message;
-          return;
+          throw new Error(errMessage);
         }
 
         setIslodding(true);
         if (data.message) {
-          setToken('yes');
+          setToken('success login');
 
           setToast({
             type: 'success',
@@ -69,7 +69,7 @@ const CompanyForm = () => {
             delay: 2000
           });
 
-          navigate('/');
+          navigate('/', { replace: true });
         } else {
           handleLoginError();
         }
