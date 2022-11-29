@@ -27,5 +27,14 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  build: {
+    rollupOptions: {
+      manualChunks: (id) => {
+        if (id.includes('node_modules')) {
+          return id.split('node_modules/')[1].split('/')[1];
+        }
+      }
+    }
   }
 });
