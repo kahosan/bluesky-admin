@@ -196,7 +196,7 @@ export const EzvizPage = () => {
             }}
           />
           {
-            error || (data ? data.code !== '200' : undefined)
+            error || (data ? data.code !== '200' : false)
               ? <NotFoundError title="请求错误" height="h-20rem" />
               : data
                 ? (
@@ -211,7 +211,7 @@ export const EzvizPage = () => {
                 : <div className="mt-30"><Loading /></div>
           }
           <div className="mt-5 mr-5 text-right">
-            <Pagination count={data ? Math.ceil(data.page.total / data.page.size) : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
+            <Pagination count={data ? Math.ceil(data?.page?.total / data?.page?.size) : 20} initialPage={page + 1} onChange={p => setPage(p - 1)}>
               <Pagination.Next><ChevronRightCircleFill /></Pagination.Next>
               <Pagination.Previous><ChevronLeftCircleFill /></Pagination.Previous>
             </Pagination>
