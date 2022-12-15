@@ -82,7 +82,7 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  enum routeNav {
+  enum layoutRoute {
     '/ezviz' = 1,
     '/rootcloud'
     // todo
@@ -91,16 +91,16 @@ export const Layout = (props: { name: string; children: React.ReactNode }) => {
   const handleTabsChange = useCallback((id: string) => {
     switch (id) {
       case '1':
-        navigate(routeNav[id]);
+        navigate(layoutRoute[id]);
         break;
       case '2':
-        navigate(routeNav[id]);
+        navigate(layoutRoute[id]);
         break;
       default:
         console.warn('route is not found, id: ', id);
         break;
     }
-  }, [routeNav, navigate]);
+  }, [layoutRoute, navigate]);
 
   return (
     <>
