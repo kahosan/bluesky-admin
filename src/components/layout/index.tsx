@@ -56,7 +56,7 @@ export const AvatarMenu = (props: { name: string }) => {
             <ThemeToggle />
             <Popover.Item line />
             <MenuItem>
-              <Text span onClick={handleLogoutClick}>Log Out</Text>
+              <Text span className="cursor-pointer" onClick={handleLogoutClick}>Log Out</Text>
             </MenuItem>
           </>
         }

@@ -15,10 +15,11 @@ export const Menu = (props: MenuProps) => {
     <Popover
       style={{ display: 'flex', ...props.style }}
       placement="bottomEnd"
+      disableItemsAutoClose
       content={
         <div
           style={{ minWidth: `${props.itemWidth || 150}px` }}
-          className={`hover-children:bg-${theme.palette.accents_1} hover-children:!cursor-pointer`}
+          className={`hover-children:bg-${theme.palette.accents_1}`}
         >
           {props.content}
         </div>
